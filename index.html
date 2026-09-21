@@ -54,12 +54,12 @@
   "use strict";
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const store={get(k,d){try{return JSON.parse(localStorage.getItem("mizan_"+k))??d}catch{return d}},set(k,v){localStorage.setItem("mizan_"+k,JSON.stringify(v))}};
-  let profile=store.get("profile",{}), stats=store.get("stats",{water:0,walk:0,checks:0,date:""}), sound=store.get("sound",true);
+  let profile=store.get("profile",{}), stats=store.get("stats",{water:0,walk:0,checks:0,date:""}), sound=false;
   const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)};
   function go(id){$$('.page').forEach(x=>x.classList.toggle('active',x.id===id));$$('.nav').forEach(x=>x.classList.toggle('active',x.dataset.go===id));scrollTo({top:0,behavior:'smooth'});if(id==='chatPage')setTimeout(()=>$('#message').focus(),250)}
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   function speak(t){if(!sound||!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[🌿💚✨🥗🚶‍♀️]/g,''));u.lang=({ar:'ar-SA',sv:'sv-SE',en:'en-US',tr:'tr-TR',fr:'fr-FR',de:'de-DE',es:'es-ES',bs:'bs-BA'})[$('#language').value]||'ar-SA';u.rate=.94;u.onstart=()=>$('#avatar').classList.add('talking');u.onend=()=>$('#avatar').classList.remove('talking');speechSynthesis.speak(u)}
-  $('#soundBtn').textContent=sound?'🔊':'🔇';$('#soundBtn').onclick=()=>{sound=!sound;store.set('sound',sound);$('#soundBtn').textContent=sound?'🔊':'🔇';if(!sound&&speechSynthesis)speechSynthesis.cancel();toast(sound?'تم تشغيل الصوت':'تم إيقاف الصوت')};
+  $('#soundBtn').textContent='🔇';$('#soundBtn').onclick=()=>{sound=false;if('speechSynthesis' in window)speechSynthesis.cancel();toast('أوقفنا صوت الترجمة. صوت AI الطبيعي يحتاج تفعيل الخدمة أولًا')};
   function addMsg(t,type){const d=document.createElement('div');d.className='msg '+type;d.textContent=t;$('#chat').appendChild(d);$('#chat').scrollTop=$('#chat').scrollHeight;return d}
   const danger=/ألم (صدر|شديد)|صعوبة (تنفس|بالتنفس)|لا أستطيع تحريك|شلل|نزيف شديد|اغماء|إغماء|suicid|انتحار/i;
   const baseReplies={sv:'Jag är här med dig 🌿 Vill du börja med mat, rörelse, smärta eller hur du mår psykiskt?',en:'I am here with you 🌿 Would you like to start with food, movement, pain, or emotional wellbeing?',tr:'Yanındayım 🌿 Yemek, hareket, ağrı veya ruh halinle mi başlayalım?',fr:'Je suis avec vous 🌿 Souhaitez-vous commencer par l’alimentation, le mouvement, la douleur ou le bien-être émotionnel ?',de:'Ich bin für dich da 🌿 Möchtest du mit Ernährung, Bewegung, Schmerzen oder seelischem Wohlbefinden beginnen?',es:'Estoy contigo 🌿 ¿Quieres empezar por alimentación, movimiento, dolor o bienestar emocional?',bs:'Tu sam uz tebe 🌿 Želiš li početi s ishranom, kretanjem, bolom ili psihičkim stanjem?'};
