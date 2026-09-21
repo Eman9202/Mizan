@@ -81,6 +81,13 @@ body{background:radial-gradient(circle at 20% 0,#eef8ef 0,#fbfaf4 42%,#f3f7ef 10
 .card{border-radius:28px;border-color:#e4e8df;box-shadow:0 12px 30px #173a310d}.primary{background:var(--mizan);border-radius:18px}.bottom{border-radius:30px 30px 0 0;background:#ffffffed;box-shadow:0 -12px 35px #173a3114}.bottom .nav.active{background:#eaf4ed;color:var(--mizan-dark);border-radius:22px}
 #installCard{order:20}
 @media(max-width:720px){#homePage .quick{grid-template-columns:repeat(2,1fr)}#homePage .quick button{min-height:130px}.journey-chip{min-height:94px;font-size:15px}.avatar-wrap{width:130px;height:170px}#homePage .hero{min-height:250px}.top{border-radius:22px}}
+</style><style id="mizan-smoothness">
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+button,.journey-chip,.nav,.card{transition:transform .16s ease,box-shadow .18s ease,background-color .18s ease,opacity .18s ease}
+button:active,.journey-chip:active{transform:scale(.975)}
+.page{animation:mizanPageIn .18s ease both}@keyframes mizanPageIn{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+button{touch-action:manipulation}.bottom{overscroll-behavior-x:contain}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page{animation:none}button,.journey-chip,.nav,.card{transition:none}}
 </style></head>
 <body>
 <div class="toast" id="toast"></div>
