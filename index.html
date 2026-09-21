@@ -69,7 +69,19 @@ input,textarea,select{border-radius:15px!important;border:1px solid #dcd8cf!impo
 @media(max-width:480px){.top{margin:0 -11px}.card,.feature-hero,.plan-card{border-radius:24px}.hero{padding:20px}.bottom{width:calc(100% - 16px)}}
 </style>
 <!-- Core interaction uses the existing voice connection and local avatar animation. -->
-</head>
+<style id="mizan-premium-home">
+:root{--mizan:#075f4c;--mizan-dark:#064b3d;--cream:#fbfaf4;--ink:#123c35}
+body{background:radial-gradient(circle at 20% 0,#eef8ef 0,#fbfaf4 42%,#f3f7ef 100%);color:var(--ink)}
+.app{max-width:1120px;margin:auto}.top{margin:12px 14px 18px;padding:12px 16px;border-radius:28px;background:#ffffffd9;box-shadow:0 12px 35px #154b3c12;backdrop-filter:blur(14px)}
+.brand b{font-size:28px;letter-spacing:2px;color:var(--mizan-dark)}.brand-mark{background:var(--mizan);color:#fff;border-radius:18px}
+#homePage .hero{background:linear-gradient(125deg,#075c49,#174f42);color:white;border:0;border-radius:34px;min-height:290px;box-shadow:0 22px 55px #0b4d3b2a;overflow:hidden}
+#homePage .hero h1,#homePage .hero p{color:white}.avatar-wrap{width:170px;height:210px;border-radius:30px;border:3px solid #ffffffb8;box-shadow:0 15px 35px #002d2450}
+.journey-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.journey-chip{background:#fff;border:1px solid #e4e9df;border-radius:26px;min-height:110px;justify-content:center;box-shadow:0 12px 28px #173a3110;font-size:18px}.journey-chip span{font-size:34px}
+#homePage .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}#homePage .quick button{min-height:155px;background:#fff;border:1px solid #e1e7de;border-radius:28px;box-shadow:0 12px 28px #173a3110;font-size:17px}#homePage .quick button span{font-size:36px}#homePage .quick button small{display:block;margin-top:8px;color:#65756f}
+.card{border-radius:28px;border-color:#e4e8df;box-shadow:0 12px 30px #173a310d}.primary{background:var(--mizan);border-radius:18px}.bottom{border-radius:30px 30px 0 0;background:#ffffffed;box-shadow:0 -12px 35px #173a3114}.bottom .nav.active{background:#eaf4ed;color:var(--mizan-dark);border-radius:22px}
+#installCard{order:20}
+@media(max-width:720px){#homePage .quick{grid-template-columns:repeat(2,1fr)}#homePage .quick button{min-height:130px}.journey-chip{min-height:94px;font-size:15px}.avatar-wrap{width:130px;height:170px}#homePage .hero{min-height:250px}.top{border-radius:22px}}
+</style></head>
 <body>
 <div class="toast" id="toast"></div>
 <section class="onboarding hide" id="onboarding"><div class="onboard-shell"><div class="onboard-head"><img class="onboard-logo" src="assets/icon-192.png" alt="MIZAN"><div><b>MIZAN</b><div>ميزان • بداية تناسبك أنت</div></div></div><div class="steps" id="onSteps"><i></i><i></i><i></i><i></i><i></i><i></i></div>
