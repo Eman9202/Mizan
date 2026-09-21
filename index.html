@@ -299,7 +299,7 @@ function setCoachState(s){const el=$('#coachState');if(el)el.textContent=s;const
     es:{home:'Inicio',meals:'Comidas',chat:'Chat',workouts:'Ejercicio',progress:'Progreso',profile:'Perfil',plans:'Planes',next:'Tu siguiente paso',start:'Empezar'},
     bs:{home:'Početna',meals:'Obroci',chat:'Razgovor',workouts:'Vježbe',progress:'Napredak',profile:'Profil',plans:'Planovi',next:'Tvoj sljedeći korak',start:'Počni sada'}
   };
-  function genderForm(forms){const g=profile.gender||onData?.gender||'';return g==='male'?(forms.male||forms.neutral||forms.female):g==='female'?(forms.female||forms.neutral||forms.male):(forms.neutral||forms.female||forms.male)}
+  function genderForm(forms){const g=profile.gender||((typeof onData!=='undefined'&&onData)?onData.gender:'')||'';return g==='male'?(forms.male||forms.neutral||forms.female):g==='female'?(forms.female||forms.neutral||forms.male):(forms.neutral||forms.female||forms.male)}
 function personalizeAddressing(){
  const lang=profile.language||$('#language')?.value||'ar';
  if(lang==='ar'){
@@ -307,7 +307,7 @@ function personalizeAddressing(){
   const m=$('#message');if(m)m.placeholder=genderForm({female:'اكتبي هنا...',male:'اكتب هنا...',neutral:'اكتب هنا...'});
  }
 }
-function applyLanguage(){const lang=profile.language||$('#language')?.value||'ar',d=uiText[lang]||uiText.ar;document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';const map={homePage:d.home,mealsPage:d.meals,chatPage:d.chat,workoutsPage:d.workouts,progressPage:d.progress,profilePage:d.profile,plansPage:d.plans};$$('.bottom .nav').forEach(n=>{const id=n.dataset.go;if(!map[id])return;const icon=n.querySelector('span')?.outerHTML||'';n.innerHTML=icon+map[id]});const nb=$('#nextBestCard small');if(nb)nb.textContent=d.next;const b=$('#nextBestBtn');if(b)b.textContent=d.start;applyFullLanguage(lang);personalizeAddressing()}
+function applyLanguage(){const lang=$('#language')?.value||profile.language||'ar',d=uiText[lang]||uiText.ar;document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';const map={homePage:d.home,mealsPage:d.meals,chatPage:d.chat,workoutsPage:d.workouts,progressPage:d.progress,profilePage:d.profile,plansPage:d.plans};$$('.bottom .nav').forEach(n=>{const id=n.dataset.go;if(!map[id])return;const icon=n.querySelector('span')?.outerHTML||'';n.innerHTML=icon+map[id]});const nb=$('#nextBestCard small');if(nb)nb.textContent=d.next;const b=$('#nextBestBtn');if(b)b.textContent=d.start;applyFullLanguage(lang);personalizeAddressing()}
   const fullUi={
 ar:{journey:['غذاؤك','حركتك','تقدّمك'],help:'كيف أساعدك؟',weekly:'تقدم هذا الأسبوع',details:'التفاصيل',chatTitle:'محادثة مع ميزان',clear:'مسح',placeholder:'اكتبي هنا...',plansHero:'برامجي',plansSub:'كل خطة يقترحها ميزان تبقى هنا واضحة وسهلة الوصول.'},
 sv:{journey:['Mat','Rörelse','Framsteg'],help:'Hur kan jag hjälpa dig?',weekly:'Veckans framsteg',details:'Detaljer',chatTitle:'Samtal med MIZAN',clear:'Rensa',placeholder:'Skriv här...',plansHero:'Mina planer',plansSub:'Alla planer du sparar finns samlade här.'},
