@@ -2,64 +2,302 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2f755f">
 <title>MIZAN | ميزان</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:linear-gradient(145deg,#eef7f1,#fdfbf5);color:#18382e}
-.app{max-width:560px;margin:auto;min-height:100vh;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.logo{font-size:28px;font-weight:800;color:#24745a}.lang{width:auto}.card{background:#ffffffed;border:1px solid #fff;border-radius:28px;padding:22px;margin:15px 0;box-shadow:0 12px 35px #173b2d12}
-.avatar{width:132px;height:132px;margin:8px auto;border-radius:50%;background:linear-gradient(145deg,#d8f0e3,#fff);display:flex;align-items:center;justify-content:center;font-size:72px;box-shadow:0 10px 30px #27765b25;animation:breathe 3s ease-in-out infinite}
-@keyframes breathe{50%{transform:translateY(-5px) scale(1.02)}}.bubble{background:#edf8f2;border-radius:20px;padding:17px;line-height:1.8;margin:14px 0}.quote{text-align:center;font-weight:700;color:#27765b}
-.progress{height:7px;background:#dfeae4;border-radius:9px;overflow:hidden;margin:14px 0}.progress div{height:100%;width:12%;background:#27765b;transition:.3s}
-button,input,select,textarea{width:100%;padding:14px;border-radius:15px;margin:6px 0;font-size:16px}input,select,textarea{border:1px solid #d2ddd7;background:#fff}textarea{min-height:82px}
-.primary{border:0;background:#27765b;color:#fff;font-weight:700}.option,.voice{border:1px solid #e2ebe6;background:#f4f8f6;color:#18382e}.selected{background:#d4eddf;border-color:#27765b}.hidden{display:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tile{padding:15px;background:#f0f8f3;border-radius:17px;text-align:center}.small{font-size:13px;color:#65766e;line-height:1.6}
-.source{font-size:12px;padding:12px;background:#f7f7f2;border-radius:12px;margin-top:10px;line-height:1.6}nav{display:flex;justify-content:space-around;margin-top:18px;padding:13px 4px;background:#fff;border-radius:18px;font-size:11px;text-align:center}
-h2{margin-bottom:8px}
+:root{--g:#2f755f;--g2:#e9f5ef;--ink:#18382e;--muted:#65766e;--cream:#fffaf1;--card:#ffffffee;--danger:#a33b3b;--shadow:0 14px 40px #173b2d16}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(145deg,#edf7f1,#fffaf1);color:var(--ink)}
+.app{max-width:620px;margin:auto;min-height:100vh;padding:18px 18px 95px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:10;padding:8px 0;background:#f4faf6dd;backdrop-filter:blur(10px)}
+.logo{font-size:25px;font-weight:900;color:var(--g)}.lang{width:auto}.card{background:var(--card);border:1px solid #fff;border-radius:26px;padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+h2{margin:4px 0 10px}h3{margin:16px 0 8px}.small{font-size:13px;color:var(--muted);line-height:1.65}.bubble{background:var(--g2);border-radius:19px;padding:15px;line-height:1.75;margin:12px 0}
+.progress{height:7px;background:#dfeae4;border-radius:9px;overflow:hidden;margin:10px 0 16px}.progress div{height:100%;width:8%;background:var(--g);transition:.35s}
+button,input,select,textarea{width:100%;padding:13px;border-radius:14px;margin:5px 0;font-size:16px;font:inherit}input,select,textarea{border:1px solid #d2ddd7;background:#fff;color:var(--ink)}textarea{min-height:76px;resize:vertical}
+button{cursor:pointer}.primary{border:0;background:var(--g);color:white;font-weight:800}.option,.soft{border:1px solid #dfe9e4;background:#f7faf8;color:var(--ink)}.option.selected{background:#d7eee2;border-color:var(--g);font-weight:750}.danger{border:1px solid #efcccc;background:#fff5f5;color:var(--danger)}.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.chips{display:flex;flex-wrap:wrap;gap:7px}.chips button{width:auto;padding:10px 13px}.row{display:flex;gap:8px}.row>*{flex:1}
+.avatarWrap{text-align:center;margin:8px auto 14px}.avatar{position:relative;width:164px;height:164px;border-radius:50%;margin:auto;background:radial-gradient(circle at 50% 38%,#fff,#dcefe5);box-shadow:0 12px 35px #27765b28;display:grid;place-items:center;overflow:hidden}
+.face{font-size:92px;line-height:1;transform-origin:center}.avatar.listening{animation:pulse 1.4s infinite}.avatar.speaking .face{animation:talk .22s infinite alternate}.ring{position:absolute;inset:5px;border:3px solid #67a78f;border-radius:50%;opacity:0}.avatar.listening .ring{animation:ring 1.5s infinite}
+@keyframes pulse{50%{transform:scale(1.025)}}@keyframes ring{50%{opacity:.7;inset:0}}@keyframes talk{to{transform:translateY(2px) scale(1.015)}}
+.status{font-weight:800;color:var(--g);margin-top:8px}.source{font-size:12px;padding:12px;background:#f7f7f2;border-radius:12px;line-height:1.6}.warn{background:#fff6e6;border:1px solid #f1d59b;border-radius:14px;padding:12px;line-height:1.6}
+.measureGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.figureBox{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:center;background:#f7faf8;border-radius:20px;padding:14px}
+.silhouette{height:230px;position:relative;display:grid;place-items:center}.bodySvg{height:220px;width:125px}.metric{padding:8px 0;border-bottom:1px solid #e4ece8}.metric:last-child{border:0}
+.plate{width:245px;height:245px;margin:12px auto;border-radius:50%;background:#fff;border:12px solid #eef1ed;box-shadow:inset 0 0 0 2px #d8ded9,0 10px 25px #173b2d14;position:relative;overflow:hidden}
+.food{position:absolute;display:grid;place-items:center;text-align:center;font-size:12px;font-weight:800;padding:8px}.food.a{inset:8% 50% 50% 8%;background:#dcefd5;border-radius:50% 8% 8% 8%}.food.b{inset:8% 8% 50% 50%;background:#f4dfb9;border-radius:8% 50% 8% 8%}.food.c{inset:50% 8% 8% 8%;background:#ead3c4;border-radius:8% 8% 50% 50%}
+.trend{height:150px;background:linear-gradient(#fff,#f7faf8);border-radius:16px;padding:8px}.trend svg{width:100%;height:100%}
+nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);width:min(586px,calc(100% - 24px));display:flex;justify-content:space-around;padding:11px 4px;background:#fffffff2;backdrop-filter:blur(12px);border-radius:18px;box-shadow:0 8px 30px #173b2d20;font-size:11px;text-align:center;z-index:20}
+nav button{border:0;background:transparent;padding:5px;margin:0;color:var(--ink);font-size:11px}
+.voicebar{display:flex;gap:8px;align-items:center}.voicebar button{margin:0}.mic{font-size:20px}
+.toggle{display:flex;align-items:center;gap:8px}.toggle input{width:auto}
+@media(max-width:430px){.figureBox{grid-template-columns:1fr}.measureGrid{grid-template-columns:1fr 1fr}.avatar{width:148px;height:148px}.face{font-size:82px}}
 </style>
 </head>
 <body>
 <main class="app">
-<div class="top"><div class="logo">⚖️ MIZAN | ميزان</div>
-<select class="lang" id="lang" onchange="setLang()"><option value="ar">العربية</option><option value="sv">Svenska</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="de">Deutsch</option></select></div>
+<div class="top">
+  <div class="logo">⚖️ MIZAN | ميزان</div>
+  <select id="lang" class="lang" onchange="setLang()">
+    <option value="ar">العربية</option><option value="sv">Svenska</option><option value="en">English</option>
+    <option value="fr">Français</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="de">Deutsch</option>
+  </select>
+</div>
 <div class="progress"><div id="bar"></div></div>
 
-<section id="s1" class="card"><div class="avatar">🌿</div><div class="bubble"><b>أهلاً، أنا MIZAN.</b><br>مش جاي أحكم عليك ولا أعطيك جدول مستحيل. بدي أفهم صحتك، حياتك وهدفك، ونبني خطوة تقدر تعيش معها.</div><p class="quote">خطتك تتغيّر مع حياتك، وليس حياتك مع الخطة.</p><button class="primary" onclick="go(2)">ابدأ معي</button></section>
+<section id="s1" class="card">
+ <div class="avatarWrap"><div class="avatar"><div class="face">🌿</div></div></div>
+ <div class="bubble"><b>أهلاً، أنا MIZAN.</b><br>نبني خطة تناسب صحتك، وقتك، أكلك وحياتك. لا يوجد حرمان ولا يوم مثالي مطلوب.</div>
+ <button class="primary" onclick="go(2)">ابدأ معي</button>
+</section>
 
-<section id="s2" class="card hidden"><div class="avatar" id="av">🙂</div><h2>كيف تحب أن أخاطبك؟</h2><button class="option" onclick="gender('female',this)">امرأة</button><button class="option" onclick="gender('male',this)">رجل</button><button class="option" onclick="gender('none',this)">أفضل عدم التحديد</button><button class="primary" onclick="go(3)">التالي</button></section>
+<section id="s2" class="card hidden">
+ <h2>اختر شخصية MIZAN التي ترتاح معها</h2>
+ <p class="small">هذا اختيار لشخصية المساعد، وليس افتراضاً عنك.</p>
+ <div class="grid">
+  <button class="option" onclick="chooseCoach('female',this)">👩<br><b>امرأة</b></button>
+  <button class="option" onclick="chooseCoach('male',this)">👨<br><b>رجل</b></button>
+ </div>
+ <h3>كيف تحب أن أخاطبك؟</h3>
+ <div class="chips"><button class="option" onclick="chooseUser('female',this)">امرأة</button><button class="option" onclick="chooseUser('male',this)">رجل</button><button class="option" onclick="chooseUser('none',this)">أفضل عدم التحديد</button></div>
+ <button class="primary" onclick="go(3)">التالي</button>
+</section>
 
-<section id="s3" class="card hidden"><h2>خليني أفهم جسمك</h2><input id="age" type="number" placeholder="العمر"><input id="height" type="number" placeholder="الطول (سم)"><input id="weight" type="number" placeholder="الوزن (كغ)"><button class="primary" onclick="go(4)">التالي</button></section>
+<section id="s3" class="card hidden">
+ <h2>خليني أفهم جسمك</h2>
+ <div class="row"><input id="age" type="number" min="13" max="100" placeholder="العمر"><input id="height" type="number" min="100" max="230" placeholder="الطول سم"></div>
+ <div class="row"><input id="weight" type="number" min="25" max="400" step=".1" placeholder="الوزن كغ"><input id="target" type="number" min="25" max="400" step=".1" placeholder="هدف الوزن - اختياري"></div>
+ <h3>قياسات اختيارية</h3><p class="small">تفيد في متابعة التغيّر حتى عندما يتحرك الميزان ببطء. استخدم شريط قياس، وبنفس الطريقة كل مرة.</p>
+ <div class="measureGrid"><input id="waist" type="number" placeholder="الخصر سم"><input id="abdomen" type="number" placeholder="البطن سم"><input id="hips" type="number" placeholder="الورك سم"><input id="chest" type="number" placeholder="الصدر سم"><input id="thigh" type="number" placeholder="الفخذ سم"><input id="arm" type="number" placeholder="الذراع سم"></div>
+ <button class="primary" onclick="go(4)">التالي</button>
+</section>
 
-<section id="s4" class="card hidden"><h2>صحتك أولاً ❤️</h2><p>اختر كل ما ينطبق عليك.</p><div id="health">
-<button class="option" onclick="pick(this)">السكري</button><button class="option" onclick="pick(this)">ضغط الدم</button><button class="option" onclick="pick(this)">القلب أو الشرايين</button><button class="option" onclick="pick(this)">الغدة الدرقية</button><button class="option" onclick="pick(this)">النقرس</button><button class="option" onclick="pick(this)">الكلى</button><button class="option" onclick="pick(this)">الكبد</button><button class="option" onclick="pick(this)">تكيس المبايض</button><button class="option" onclick="pick(this)">الكوليسترول</button><button class="option" onclick="pick(this)">مشاكل الجهاز الهضمي</button><button class="option" onclick="pick(this)">حامل</button><button class="option" onclick="pick(this)">مرضع</button>
-</div><textarea placeholder="مرض، دواء أو حالة صحية أخرى تريد أن يعرفها MIZAN..."></textarea><p class="small">MIZAN لا يشخّص الأمراض ولا يوقف أو يغيّر الأدوية والجرعات. الحمل والرضاعة والحالات الطبية قد تحتاج متابعة مختص صحي.</p><button class="primary" onclick="go(5)">التالي</button></section>
+<section id="s4" class="card hidden">
+ <h2>أين تشعر أن جسمك يخزن الدهون أكثر؟</h2>
+ <p class="small">هذا يساعدنا على فهم تجربتك ومتابعة القياسات. لا يمكن للتمرين وحده اختيار مكان نزول الدهون، لكن يمكن تقوية عضلات منطقة معينة.</p>
+ <div id="fatAreas" class="chips">
+  <button class="option" onclick="pick(this)">البطن</button><button class="option" onclick="pick(this)">الخصر</button><button class="option" onclick="pick(this)">الورك</button><button class="option" onclick="pick(this)">الفخذان</button><button class="option" onclick="pick(this)">الذراعان</button><button class="option" onclick="pick(this)">الظهر</button><button class="option" onclick="pick(this)">الصدر</button><button class="option" onclick="pick(this)">موزعة</button>
+ </div>
+ <textarea id="hardArea" placeholder="أي منطقة تشعر أنها الأصعب في التغيير؟"></textarea>
+ <button class="primary" onclick="go(5)">التالي</button>
+</section>
 
-<section id="s5" class="card hidden"><h2>الأكل مش أرقام وبس 🍽️</h2><button class="option" onclick="pick(this)">أفقد السيطرة على الأكل أحياناً</button><button class="option" onclick="pick(this)">آكل مع التوتر أو المشاعر</button><button class="option" onclick="pick(this)">آكل من الملل</button><button class="option" onclick="pick(this)">آكل كثيراً بالليل</button><button class="option" onclick="pick(this)">رغبتي بالحلويات قوية</button><button class="option" onclick="pick(this)">صعب أتحكم بالكمية</button><textarea placeholder="احكيلي بطريقتك، بدون حكم..."></textarea><button class="primary" onclick="go(6)">التالي</button></section>
+<section id="s5" class="card hidden">
+ <h2>صحتك أولاً ❤️</h2>
+ <p>اختر ما ينطبق عليك فقط.</p>
+ <div id="health" class="chips">
+  <button class="option" onclick="pick(this)">السكري</button><button class="option" onclick="pick(this)">ضغط الدم</button><button class="option" onclick="pick(this)">القلب أو الشرايين</button><button class="option" onclick="pick(this)">الغدة الدرقية</button><button class="option" onclick="pick(this)">الكلى</button><button class="option" onclick="pick(this)">الكبد</button><button class="option" onclick="pick(this)">مشاكل الجهاز الهضمي</button><button class="option" onclick="pick(this)">حامل</button><button class="option" onclick="pick(this)">مرضع</button><button class="option" onclick="pick(this)">الدورة الشهرية الآن</button>
+ </div>
+ <textarea id="medical" placeholder="مرض، دواء، إصابة أو حالة أخرى..."></textarea>
+ <h3>هل أخبرك مختص أن لديك نقصاً؟</h3>
+ <div id="deficiencies" class="chips"><button class="option" onclick="pick(this)">الحديد</button><button class="option" onclick="pick(this)">فيتامين D</button><button class="option" onclick="pick(this)">B12</button><button class="option" onclick="pick(this)">الفولات</button><button class="option" onclick="pick(this)">نقص آخر</button><button class="option" onclick="pick(this)">لا أعرف</button></div>
+ <textarea id="labs" placeholder="اكتب النقص أو نتيجة التحليل إن كانت معروفة - اختياري"></textarea>
+ <div class="warn">MIZAN لا يشخّص نقص الفيتامينات ولا يغيّر المكملات أو الأدوية. التحاليل والعلاج تُراجع مع مختص صحي.</div>
+ <button class="primary" onclick="go(6)">التالي</button>
+</section>
 
-<section id="s6" class="card hidden"><h2>الحساسية وطريقة أكلك 🥗</h2><p>هذه المعلومات مهمة قبل أي اقتراح طعام.</p>
-<button class="option" onclick="pick(this)">عندي حساسية طعام</button><textarea placeholder="اكتب الحساسية: مكسرات، حليب، بيض، سمسم، سمك، محار، قمح... أو غيرها"></textarea>
-<button class="option" onclick="pick(this)">عدم تحمّل اللاكتوز أو طعام آخر</button>
-<button class="option" onclick="pick(this)">Vegetarian — نباتي</button><button class="option" onclick="pick(this)">Vegan — نباتي كامل</button><button class="option" onclick="pick(this)">حلال</button><button class="option" onclick="pick(this)">خالي من الغلوتين عند الحاجة الطبية</button>
-<textarea placeholder="هل هناك شيء لا تأكله لأسباب صحية، دينية، أخلاقية، ثقافية أو شخصية؟"></textarea><textarea placeholder="أطعمة تحبها أو تفضلها..."></textarea>
-<p class="small">MIZAN يجب أن يراعي الحساسية والقيود الغذائية قبل اقتراح أي وجبة. الحساسية الشديدة تحتاج تعليمات طبية وخطة طوارئ مناسبة.</p><button class="primary" onclick="go(7)">التالي</button></section>
+<section id="s6" class="card hidden">
+ <h2>الأكل لازم يشبهك 🍽️</h2>
+ <h3>تميل أكثر إلى؟</h3><div class="grid"><button class="option" onclick="singlePick(this,'taste')">🍫 الحلو</button><button class="option" onclick="singlePick(this,'taste')">🥨 المالح</button></div>
+ <textarea id="likes" placeholder="أكلات تحبها فعلاً..."></textarea><textarea id="dislikes" placeholder="أكلات لا تحبها أو لا تتحمل طعمها..."></textarea>
+ <h3>الحساسية وطريقة الأكل</h3>
+ <div id="diet" class="chips"><button class="option" onclick="pick(this)">حساسية طعام</button><button class="option" onclick="pick(this)">عدم تحمل اللاكتوز</button><button class="option" onclick="pick(this)">Vegetarian</button><button class="option" onclick="pick(this)">Vegan</button><button class="option" onclick="pick(this)">حلال</button><button class="option" onclick="pick(this)">خالي من الغلوتين طبياً</button></div>
+ <textarea id="allergy" placeholder="اكتب الحساسية أو أي قيود دينية، ثقافية، أخلاقية أو صحية..."></textarea>
+ <button class="primary" onclick="go(7)">التالي</button>
+</section>
 
-<section id="s7" class="card hidden"><h2>شو بدك تحقق؟ 🎯</h2><select id="goal"><option>تنزيل الوزن</option><option>المحافظة على الوزن</option><option>تحسين صحتي وطريقة أكلي</option><option>زيادة الحركة والنشاط</option><option>تنظيم الأكل بسبب حالة صحية</option><option>الشعور براحة أكبر مع جسمي</option><option>هدف آخر</option></select><textarea id="goalText" placeholder="هدفك بكلماتك أنت..."></textarea><button class="primary" onclick="go(8)">هذا هدفي</button></section>
+<section id="s7" class="card hidden">
+ <h2>علاقتك بالأكل مهمة</h2>
+ <div class="chips"><button class="option" onclick="pick(this)">آكل مع التوتر</button><button class="option" onclick="pick(this)">آكل من الملل</button><button class="option" onclick="pick(this)">أكثر أكلي ليلاً</button><button class="option" onclick="pick(this)">أفقد السيطرة أحياناً</button><button class="option" onclick="pick(this)">رغبتي بالحلويات قوية</button></div>
+ <textarea id="foodStory" placeholder="احكي بطريقتك، بدون حكم..."></textarea>
+ <button class="primary" onclick="go(8)">التالي</button>
+</section>
 
-<section id="s8" class="card hidden"><h2>الخطة لازم تناسب حياتك</h2><select><option>ميزانيتي محدودة</option><option>ميزانيتي متوسطة</option><option>الميزانية ليست مشكلة</option></select><select><option>وقت الطبخ قليل جداً</option><option>وقت متوسط</option><option>أحب الطبخ وعندي وقت</option></select><textarea placeholder="شو موجود عندك بالبيت اليوم؟"></textarea><textarea placeholder="صيام، رمضان، عادات دينية أو ثقافية، أوقات وجبات أو احتياجات تحب أن أحترمها..."></textarea><textarea placeholder="أطفال، عمل، دراسة، نوم، ضغط أو ظروف أخرى..."></textarea><p class="small">أنت تختار ما تشاركه. MIZAN لا يفترض دينك أو ثقافتك أو قيمك من لغتك أو بلدك.</p><button class="primary" onclick="finish()">ابني يومي مع MIZAN</button></section>
+<section id="s8" class="card hidden">
+ <h2>شو بدك تحقق؟ 🎯</h2>
+ <select id="goal"><option>تنزيل الوزن</option><option>المحافظة على الوزن</option><option>تحسين صحتي وطريقة أكلي</option><option>زيادة الحركة والنشاط</option><option>تنظيم الأكل بسبب حالة صحية</option><option>الشعور براحة أكبر مع جسمي</option></select>
+ <textarea id="goalText" placeholder="هدفك بكلماتك..."></textarea>
+ <h3>حياتك اليومية</h3>
+ <select id="budget"><option>ميزانيتي محدودة</option><option>ميزانيتي متوسطة</option><option>الميزانية ليست مشكلة</option></select>
+ <select id="cookTime"><option>وقت الطبخ قليل جداً</option><option>وقت متوسط</option><option>أحب الطبخ وعندي وقت</option></select>
+ <textarea id="life" placeholder="أطفال، عمل، دراسة، نوم، صيام أو ظروف تحب أن نراعيها..."></textarea>
+ <button class="primary" onclick="finish()">ابنِ يومي مع MIZAN</button>
+</section>
 
-<section id="home" class="card hidden"><div class="avatar" id="finalAv">🌿</div><div class="bubble" id="message"></div><div class="grid"><div class="tile">🥣<br><b>وجباتي</b><br>مرنة</div><div class="tile">💧<br><b>الماء</b><br>اليوم</div><div class="tile">🚶<br><b>الحركة</b><br>خطوة مناسبة</div><div class="tile">🧠<br><b>مزاجي</b><br>بدون حكم</div></div><div class="bubble">اليوم ما مشي مثل الخطة؟ ما في صفر ولا فشل. <b>نفهم شو صار، نعدّل، ونكمّل.</b> 🌱</div><button class="primary" onclick="talk()">💬 احكي مع MIZAN</button><div id="chat" class="hidden"><textarea id="chatText" placeholder="مثلاً: أنا جوعانة ومتوترة، شو أعمل؟"></textarea><button class="voice" onclick="listen()">🎙️ احكي بصوتك</button><button class="primary" onclick="reply()">إرسال</button><div id="answer" class="bubble hidden"></div><button id="speakBtn" class="voice hidden" onclick="speakAnswer()">🔊 اسمع MIZAN</button></div><div class="source"><b>🛡️ أساس صحي موثوق</b><br>تُبنى الإرشادات العامة على مصادر صحية رسمية مثل منظمة الصحة العالمية. احتياجات الشخص الطبية قد تختلف، لذلك لا يحل MIZAN محل الطبيب أو اختصاصي التغذية.</div><nav><span>🏠<br>اليوم</span><span>🍽️<br>الأكل</span><span>💬<br>MIZAN</span><span>📈<br>تقدمي</span><span>👤<br>ملفي</span></nav></section>
+<section id="home" class="card hidden">
+ <div class="avatarWrap">
+  <div id="coachAvatar" class="avatar"><div class="ring"></div><div id="coachFace" class="face">👩</div></div>
+  <div id="voiceStatus" class="status">MIZAN معك 🌿</div>
+ </div>
+ <div id="message" class="bubble"></div>
+ <div class="grid">
+  <button class="soft" onclick="showPanel('foodPanel')">🍽️<br><b>وجبة سهلة</b></button>
+  <button class="soft" onclick="showPanel('movePanel')">🚶<br><b>نشاط اليوم</b></button>
+  <button class="soft" onclick="showPanel('progressPanel')">📈<br><b>تقدمي</b></button>
+  <button class="soft" onclick="showPanel('chatPanel')">💬<br><b>احكي معي</b></button>
+ </div>
+
+ <div id="foodPanel" class="panel hidden">
+  <h2>شو موجود عندك اليوم؟</h2>
+  <textarea id="availableFood" placeholder="مثلاً: رز، لبن، خيار، تونة، بطاطا، عدس..."></textarea>
+  <button class="primary" onclick="makeRecipe()">✨ اعمل لي وجبة سهلة من الموجود</button>
+  <div id="recipe" class="bubble hidden"></div>
+  <div id="plateWrap" class="hidden"><h3>شكل تقريبي للصحن للتشجيع</h3><div class="plate"><div id="plateA" class="food a">خضار</div><div id="plateB" class="food b">نشويات</div><div id="plateC" class="food c">بروتين</div></div><p class="small">الصورة تخطيطية للحصص وليست صورة دقيقة للوصفة.</p></div>
+ </div>
+
+ <div id="movePanel" class="panel hidden">
+  <h2>كيف جسمك اليوم؟</h2>
+  <select id="energy"><option>طاقتي قليلة</option><option selected>طاقتي متوسطة</option><option>طاقتي جيدة</option></select>
+  <textarea id="pain" placeholder="هل عندك ألم، إصابة، دوخة أو شيء يزعجك؟ وأين؟"></textarea>
+  <textarea id="focus" placeholder="هل في منطقة تحب تقويها أو تركز عليها؟"></textarea>
+  <div class="grid"><button class="option" onclick="startWalk()">🚶 أمشي وMIZAN يحكي معي</button><button class="option" onclick="startWorkout()">🤸 تمارين تدريجية معي</button></div>
+  <div id="activity" class="bubble hidden"></div>
+ </div>
+
+ <div id="progressPanel" class="panel hidden">
+  <h2>رحلتي</h2>
+  <div class="row"><input id="newWeight" type="number" step=".1" placeholder="وزني اليوم كغ"><input id="newWaist" type="number" step=".1" placeholder="خصري اليوم سم"></div>
+  <button class="primary" onclick="addProgress()">سجّل التقدم</button>
+  <div class="figureBox">
+   <div class="silhouette">
+    <svg class="bodySvg" viewBox="0 0 120 230" aria-label="رسم تقريبي غير فوتوغرافي للجسم">
+      <circle cx="60" cy="28" r="20" fill="#cfe7da"/>
+      <path id="bodyShape" d="M42 52 Q60 45 78 52 Q91 83 82 112 Q91 148 78 207 L66 207 L60 142 L54 207 L42 207 Q29 148 38 112 Q29 83 42 52Z" fill="#8fc2ad"/>
+    </svg>
+   </div>
+   <div><div class="metric"><b>البداية:</b> <span id="startMetric">—</span></div><div class="metric"><b>الآن:</b> <span id="nowMetric">—</span></div><div class="metric"><b>الاتجاه:</b> <span id="trendText">نحتاج أكثر من تسجيل لرؤية الاتجاه.</span></div><p class="small">الرسم تقريبي فقط ولا يتنبأ بشكل جسمك المستقبلي أو بمكان نزول الدهون.</p></div>
+  </div>
+  <div class="trend"><svg viewBox="0 0 300 120"><polyline id="trendLine" points="10,70 290,70" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+ </div>
+
+ <div id="chatPanel" class="panel hidden">
+  <div class="voicebar"><button id="conversationBtn" class="primary mic" onclick="toggleConversation()">🎙️ ابدأ المحادثة</button><button class="danger" onclick="stopConversation()">⏹️ إيقاف</button></div>
+  <textarea id="chatText" placeholder="أو اكتب هنا..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();reply()}"></textarea>
+  <button class="soft" onclick="reply()">إرسال كتابة</button>
+  <div id="answer" class="bubble hidden"></div>
+ </div>
+
+ <div class="source"><b>🛡️ كيف نبني الثقة؟</b><br>MIZAN يشرح سبب الاقتراح، يراعي القيود التي أدخلتها، ولا يعدك بنتيجة مضمونة. الإرشادات العامة لا تستبدل الطبيب أو اختصاصي التغذية، خصوصاً مع الحمل والرضاعة، الأمراض، الأدوية أو نتائج التحاليل.</div>
+</section>
 </main>
+
+<nav id="nav" class="hidden">
+ <button onclick="showHome()">🏠<br>اليوم</button><button onclick="showPanel('foodPanel')">🍽️<br>الأكل</button><button onclick="showPanel('chatPanel')">💬<br>MIZAN</button><button onclick="showPanel('progressPanel')">📈<br>تقدمي</button><button onclick="showProfile()">👤<br>ملفي</button>
+</nav>
+
 <script>
-let sex='none',lastAnswer='';
-function go(n){document.querySelectorAll('section').forEach(x=>x.classList.add('hidden'));document.getElementById('s'+n).classList.remove('hidden');document.getElementById('bar').style.width=Math.min(n*11.5,92)+'%';scrollTo(0,0)}
-function gender(g,b){sex=g;document.querySelectorAll('#s2 .option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');let a=g==='female'?'👩':g==='male'?'👨':'🙂';document.getElementById('av').textContent=a;document.getElementById('finalAv').textContent=a}
-function pick(x){x.classList.toggle('selected')}
+let coach='female', userGender='none', lastAnswer='', conversationActive=false, recognition=null, isSpeaking=false;
+let history=[];
+
+function go(n){
+ document.querySelectorAll('main section').forEach(x=>x.classList.add('hidden'));
+ document.getElementById('s'+n).classList.remove('hidden');
+ document.getElementById('bar').style.width=Math.min(8+n*10.5,94)+'%'; scrollTo(0,0); tone(520,.05);
+}
+function chooseCoach(v,b){coach=v;document.querySelectorAll('#s2 .grid .option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');tone(620,.05)}
+function chooseUser(v,b){userGender=v;document.querySelectorAll('#s2 .chips .option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}
+function pick(b){b.classList.toggle('selected');tone(560,.035)}
+function singlePick(b,group){b.parentElement.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}
+function selectedText(id){return [...document.querySelectorAll('#'+id+' .selected')].map(x=>x.textContent.trim()).join('، ')}
+function val(id){return document.getElementById(id)?.value?.trim()||''}
 function safe(s){let d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function finish(){document.querySelectorAll('section').forEach(x=>x.classList.add('hidden'));document.getElementById('home').classList.remove('hidden');document.getElementById('bar').style.width='100%';let g=document.getElementById('goal').value,t=document.getElementById('goalText').value;document.getElementById('message').innerHTML='فهمتك 🌿 هدفك <b>'+safe(g)+'</b>.'+(t?'<br>'+safe(t):'')+'<br><br>ما بدنا يوم مثالي؛ بدنا خطوات تناسب حياتك وصحتك وتقدر تكمل معها.';scrollTo(0,0)}
-function talk(){document.getElementById('chat').classList.toggle('hidden')}
-function reply(){let q=document.getElementById('chatText').value.trim(),a=document.getElementById('answer');a.classList.remove('hidden');if(!q){lastAnswer='احكيلي شو وضعك الآن، وأنا معك خطوة بخطوة 🌿'}else if(/صدر|تنفس|إغماء|نزيف|ألم شديد/.test(q)){lastAnswer='الأعراض اللي وصفتها ممكن تحتاج تقييماً طبياً سريعاً. لا تعتمد على MIZAN وحده في حالة طارئة، وتواصل مع الرعاية الصحية أو الطوارئ في بلدك.'}else if(/حساسي|allerg/i.test(q)){lastAnswer='سلامتك أولاً. إذا عندك حساسية معروفة لازم نعرف المادة المسببة قبل اقتراح أي طعام. وإذا ظهرت صعوبة تنفس أو تورم شديد أو أعراض حساسية خطيرة، اطلب الرعاية الطارئة فوراً.'}else if(/فشلت|خربت|بوظت/.test(q)){lastAnswer='ما خربت شيء 🌱 وجبة أو يوم ما بيمسح تقدمك. خلينا نفهم شو صار ونختار خطوة صغيرة للوجبة أو الساعة الجاية.'}else if(/جوع|آكل|اكل/.test(q)){lastAnswer='تمام، ما بدنا نحارب الجوع. احكيلي شو الأكل الموجود عندك الآن، ومتى كانت آخر وجبة، وبنختار شيء مشبع مع مراعاة صحتك وحساسيتك وطريقة أكلك.'}else if(/حلو|سكر|شوكولا/.test(q)){lastAnswer='الرغبة بالحلو مش فشل. خلينا نعرف: أنت جوعان/ة فعلاً، متوتر/ة، ولا نفسك بطعم حلو؟ الجواب بيساعدنا نختار بدون حرمان أو لوم.'}else{lastAnswer='أنا سامعك 🌿 ما بدي أعطيك جواب محفوظ. احكيلي أكثر: شو صار اليوم، وشو أصعب شيء عليك الآن؟'}a.textContent=lastAnswer;document.getElementById('speakBtn').classList.remove('hidden')}
-function speakAnswer(){if(!lastAnswer||!('speechSynthesis' in window))return;let u=new SpeechSynthesisUtterance(lastAnswer);let l=document.getElementById('lang').value;u.lang=l==='ar'?'ar-SA':l;speechSynthesis.cancel();speechSynthesis.speak(u)}
-function listen(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('التعرف الصوتي غير متوفر في هذا المتصفح. يمكنك الكتابة بدلاً منه.');return}let r=new SR(),l=document.getElementById('lang').value;r.lang=l==='ar'?'ar-SA':l;r.onresult=e=>{document.getElementById('chatText').value=e.results[0][0].transcript;reply()};r.start()}
-function setLang(){let l=document.getElementById('lang').value;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l!=='ar')alert('اختيار اللغة جاهز. الترجمة الكاملة وربط AI متعدد اللغات ستكون في مرحلة الربط التالية.')}
+
+function finish(){
+ document.querySelectorAll('main section').forEach(x=>x.classList.add('hidden'));
+ document.getElementById('home').classList.remove('hidden');document.getElementById('nav').classList.remove('hidden');
+ document.getElementById('bar').style.width='100%';document.getElementById('coachFace').textContent=coach==='male'?'👨':'👩';
+ let goal=val('goal'), extra=val('goalText');
+ document.getElementById('message').innerHTML='فهمتك 🌿 هدفك <b>'+safe(goal)+'</b>.'+(extra?'<br>'+safe(extra):'')+'<br><br>سنبدأ بخطوات قابلة للتنفيذ، ونعدّلها حسب طاقتك وصحتك وتقدمك.';
+ let w=parseFloat(val('weight')); if(w){history=[{w,waist:parseFloat(val('waist'))||null}];renderProgress()}
+ tone(700,.08);setTimeout(()=>tone(860,.08),90);scrollTo(0,0);
+}
+function hidePanels(){document.querySelectorAll('.panel').forEach(x=>x.classList.add('hidden'))}
+function showPanel(id){hidePanels();document.getElementById(id).classList.remove('hidden');document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});tone(600,.04)}
+function showHome(){hidePanels();scrollTo({top:0,behavior:'smooth'})}
+function showProfile(){hidePanels();document.getElementById('message').scrollIntoView({behavior:'smooth'});document.getElementById('message').innerHTML='ملفك محفوظ حالياً داخل هذه الجلسة التجريبية فقط. عند ربط قاعدة بيانات آمنة سنضيف الحفظ الدائم وإعدادات الخصوصية.'}
+
+function makeRecipe(){
+ let items=val('availableFood');let box=document.getElementById('recipe');
+ if(!items){box.classList.remove('hidden');box.textContent='اكتب لي شو موجود عندك أولاً؛ هدفي أستخدم الموجود بدل ما أعطيك وصفة متعبة.';return}
+ let lower=items.toLowerCase(), protein='مصدر بروتين متوفر عندك', carb='كمية معتدلة من النشويات المتوفرة', veg='أي خضار متوفر';
+ if(/تونة|سمك/.test(lower))protein='تونة/سمك'; else if(/بيض/.test(lower))protein='بيض'; else if(/دجاج|فراخ/.test(lower))protein='دجاج'; else if(/عدس|حمص|فول/.test(lower))protein='بقول متوفرة';
+ if(/رز|أرز/.test(lower))carb='رز'; else if(/بطاط/.test(lower))carb='بطاطا'; else if(/خبز|توست/.test(lower))carb='خبز';
+ if(/خيار/.test(lower))veg='خيار'; else if(/طما|بندور/.test(lower))veg='طماطم'; else if(/خس/.test(lower))veg='خس أو سلطة';
+ let deficiency=selectedText('deficiencies');
+ let note=deficiency.includes('الحديد')?' وبما أنك أشرت إلى الحديد: وجود مصدر حديد مع طعام غني بفيتامين C قد يساعد الامتصاص، لكن الطعام لا يستبدل علاج نقص الحديد الموصوف.':'';
+ box.classList.remove('hidden');
+ box.innerHTML='<b>اقتراح بسيط من الموجود:</b><br>1) حضّر '+safe(protein)+' بطريقة بسيطة.<br>2) أضف '+safe(carb)+'.<br>3) كمّل الصحن بـ '+safe(veg)+'.<br>4) استخدم بهارات/ليمون/أعشاب تحبها بدل تعقيد الوصفة.<br><br>إذا في مكوّن مفيد ما بتحب طعمه، خبرني؛ نغيّر طريقة تحضيره أو ندمجه بوصفة ألطف بدل إجبارك عليه.'+safe(note);
+ document.getElementById('plateA').textContent=veg;document.getElementById('plateB').textContent=carb;document.getElementById('plateC').textContent=protein;document.getElementById('plateWrap').classList.remove('hidden');tone(760,.08);
+}
+
+function hasRedFlag(text){return /ألم صدر|صدر.*ألم|ضيق.*تنفس|إغماء|نزيف شديد|شلل|لا أستطيع.*تحريك|الم شديد جداً|ألم شديد جداً/i.test(text)}
+function startWalk(){
+ let p=val('pain');let out=document.getElementById('activity');out.classList.remove('hidden');
+ if(hasRedFlag(p)){out.textContent='قبل المشي، الأعراض التي كتبتها قد تحتاج تقييماً طبياً عاجلاً. لا تبدأ التمرين واعتمد على الرعاية الطبية المناسبة.';return}
+ out.innerHTML='<b>مشي اليوم: بداية سهلة.</b><br>ابدأ 5–10 دقائق بوتيرة تستطيع معها الكلام. إذا كان جسمك مرتاحاً، زد الوقت تدريجياً في الأيام القادمة. إذا ظهر ألم غير معتاد، دوخة، ضيق نفس أو تدهور واضح، توقف وقيّم الوضع.';
+ speak('يلا نمشي بهدوء. أول هدف اليوم إن الحركة تكون مريحة وقابلة للتكرار، مش إننا نتعبك.');
+}
+function startWorkout(){
+ let p=val('pain'),e=val('energy'),out=document.getElementById('activity');out.classList.remove('hidden');
+ if(hasRedFlag(p)){out.textContent='لن أبدأ التمرين مع هذه الأعراض. قد تحتاج تقييماً طبياً عاجلاً قبل النشاط.';return}
+ let low=e.includes('قليلة');
+ out.innerHTML='<b>جلسة اليوم '+(low?'خفيفة جداً':'خفيفة')+':</b><br>• دقيقتان حركة لطيفة وتسخين.<br>• 5 مرات جلوس ووقوف من كرسي ببطء إذا كان ذلك بلا ألم.<br>• دقيقة حركة للكتفين والكاحلين.<br>• راحة، ثم قيّم شعورك.<br><br>لن نرفع الصعوبة لمجرد مرور الأيام؛ نرفعها عندما تصبح الحركة مريحة ولا توجد علامات تستدعي التوقف.';
+ speak('أنا معك. نبدأ بسهولة. إذا أي حركة سببت ألم غير طبيعي، وقفها وخبرني وين الألم.');
+}
+
+function addProgress(){
+ let w=parseFloat(val('newWeight')),wa=parseFloat(val('newWaist'));if(!w){alert('اكتب وزنك الحالي أولاً.');return}
+ history.push({w,waist:wa||null});renderProgress();tone(720,.07);
+}
+function renderProgress(){
+ if(!history.length)return;let first=history[0],last=history[history.length-1];
+ document.getElementById('startMetric').textContent=first.w+' كغ'+(first.waist?' • خصر '+first.waist+' سم':'');
+ document.getElementById('nowMetric').textContent=last.w+' كغ'+(last.waist?' • خصر '+last.waist+' سم':'');
+ let diff=last.w-first.w;
+ document.getElementById('trendText').textContent=history.length<2?'نحتاج أكثر من تسجيل لرؤية الاتجاه.':Math.abs(diff)<.3?'الوزن قريب من البداية؛ نراقب الاتجاه والقياسات بدون استعجال.':diff<0?'الاتجاه نازل تدريجياً. التذبذب اليومي طبيعي؛ الأهم الاتجاه عبر الوقت.':'الوزن أعلى من البداية حالياً. تسجيل واحد لا يعني فشلاً؛ ننظر للنمط والظروف ثم نعدّل.';
+ let ws=history.map(x=>x.w),min=Math.min(...ws),max=Math.max(...ws),range=Math.max(max-min,1);
+ let pts=ws.map((w,i)=>`${10+i*(280/Math.max(ws.length-1,1))},${15+(w-min)/range*85}`).join(' ');
+ document.getElementById('trendLine').setAttribute('points',pts||'10,70 290,70');
+ let ratio=(last.waist||parseFloat(val('waist'))||90)/(parseFloat(val('height'))||165);
+ let scale=Math.max(.86,Math.min(1.14,.92+ratio*.12));document.getElementById('bodyShape').setAttribute('transform',`translate(${60-60*scale} 0) scale(${scale} 1)`);
+}
+
+function buildReply(q){
+ if(!q)return 'احكيلي شو وضعك الآن، وأنا معك خطوة بخطوة 🌿';
+ if(hasRedFlag(q))return 'الأعراض التي وصفتها قد تحتاج تقييماً طبياً عاجلاً. لا تعتمد على MIZAN وحده في حالة طارئة وتواصل مع الرعاية الصحية أو الطوارئ في بلدك.';
+ if(/حساسي|allerg/i.test(q))return 'سلامتك أولاً. قبل اقتراح أي طعام لازم أعرف المادة المسببة للحساسية. صعوبة التنفس أو تورم شديد أو أعراض حساسية خطيرة تستدعي رعاية طارئة.';
+ if(/فشلت|خربت|بوظت/.test(q))return 'يوم واحد لا يلغي تقدمك. خلينا نفهم شو صار ونختار خطوة صغيرة للساعة أو الوجبة القادمة.';
+ if(/حديد|فيتامين|b12|vitamin/i.test(q))return 'إذا عندك نقص مثبت بتحليل، خبرني أي عنصر ونتيجة التحليل إن كنت تعرفها، وما الأطعمة التي تحبها. أقدر أقترح مصادر غذائية وطرق تحضير ألطف، لكن العلاج والمكملات يحددها المختص.';
+ if(/جوع|آكل|اكل|وجبة/.test(q))return 'تمام، ما بدنا نحارب الجوع. شو موجود عندك الآن؟ ومتى كانت آخر وجبة؟ وبنختار شيء سهل ومشبع مع مراعاة صحتك وحساسيتك.';
+ if(/تمرين|رياضة|مشي/.test(q))return 'قبل ما نبدأ: كيف طاقتك اليوم؟ وهل عندك ألم أو إصابة أو دوخة؟ بعدها نختار مشي أو تمارين ونبدأ من مستوى سهل.';
+ return 'أنا سامعك 🌿 احكيلي أكثر عن أصعب شيء عليك الآن، وبنحوّله لخطوة صغيرة قابلة للتنفيذ.';
+}
+function reply(){
+ let q=val('chatText'),a=document.getElementById('answer');lastAnswer=buildReply(q);a.textContent=lastAnswer;a.classList.remove('hidden');if(conversationActive)speak(lastAnswer);
+}
+
+function toggleConversation(){conversationActive?stopConversation():startConversation()}
+function startConversation(){
+ let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){alert('التعرف الصوتي غير متوفر في هذا المتصفح. استخدم الكتابة حالياً.');return}
+ conversationActive=true;document.getElementById('conversationBtn').textContent='🎙️ المحادثة تعمل';
+ recognition=new SR();recognition.lang=document.getElementById('lang').value==='ar'?'ar-SA':document.getElementById('lang').value;recognition.interimResults=true;recognition.continuous=false;
+ recognition.onstart=()=>{if(!isSpeaking){setVoiceState('listening','🎙️ أنا سامعك...')}}
+ recognition.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;document.getElementById('chatText').value=t}
+ recognition.onend=()=>{if(!conversationActive||isSpeaking)return;let q=val('chatText');q?reply():setTimeout(restartListening,500)}
+ recognition.onerror=e=>{if(e.error==='not-allowed'){stopConversation();alert('اسمح للمتصفح باستخدام الميكروفون.')}else if(conversationActive&&!isSpeaking)setTimeout(restartListening,700)}
+ recognition.start();
+}
+function restartListening(){if(!conversationActive||isSpeaking)return;try{recognition.start()}catch(e){setTimeout(()=>{try{if(conversationActive&&!isSpeaking)recognition.start()}catch(_){}},600)}}
+function stopConversation(){conversationActive=false;isSpeaking=false;try{recognition&&recognition.stop()}catch(e){};if('speechSynthesis'in window)speechSynthesis.cancel();document.getElementById('conversationBtn').textContent='🎙️ ابدأ المحادثة';setVoiceState('idle','MIZAN معك 🌿')}
+function speak(text){
+ if(!('speechSynthesis'in window))return;
+ isSpeaking=true;try{recognition&&recognition.stop()}catch(e){};setVoiceState('speaking','🔊 MIZAN يتحدث...');
+ let u=new SpeechSynthesisUtterance(text);u.lang=document.getElementById('lang').value==='ar'?'ar-SA':document.getElementById('lang').value;u.rate=.94;u.pitch=coach==='male'?.88:1.05;
+ let voices=speechSynthesis.getVoices(),wanted=voices.find(v=>v.lang.toLowerCase().startsWith(u.lang.slice(0,2).toLowerCase()));if(wanted)u.voice=wanted;
+ u.onend=()=>{isSpeaking=false;setVoiceState(conversationActive?'listening':'idle',conversationActive?'🎙️ دورك... أنا سامعك':'MIZAN معك 🌿');if(conversationActive){document.getElementById('chatText').value='';setTimeout(restartListening,450)}};
+ speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+function setVoiceState(state,text){let a=document.getElementById('coachAvatar');a.classList.remove('listening','speaking');if(state==='listening')a.classList.add('listening');if(state==='speaking')a.classList.add('speaking');document.getElementById('voiceStatus').textContent=text}
+function tone(freq=600,dur=.05){try{let A=window.AudioContext||window.webkitAudioContext,ctx=new A(),o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;g.gain.setValueAtTime(.025,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+dur)}catch(e){}}
+function setLang(){let l=document.getElementById('lang').value;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l!=='ar')alert('واجهة اللغات الأخرى تحتاج نصوص ترجمة كاملة قبل النشر. الصوت سيحاول استخدام لغة الاختيار إذا كانت متوفرة على الجهاز.')}
 </script>
-</body></html>
+</body>
+</html>
