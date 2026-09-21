@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIZAN | ميزان</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f4f8f3;
+ color:#17352b;
+}
+.app{
+ max-width:520px;
+ margin:auto;
+ min-height:100vh;
+ padding:22px;
+}
+.logo{
+ text-align:center;
+ font-size:30px;
+ font-weight:bold;
+ color:#27765b;
+ margin:10px;
+}
+.card{
+ background:white;
+ border-radius:25px;
+ padding:22px;
+ margin:15px 0;
+ box-shadow:0 6px 25px #00000012;
+}
+.avatar{
+ width:115px;
+ height:115px;
+ margin:auto;
+ border-radius:50%;
+ background:#dff1e8;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:65px;
+ animation:float 2.5s infinite;
+}
+@keyframes float{
+ 50%{transform:translateY(-7px)}
+}
+.bubble{
+ background:#eaf6ef;
+ border-radius:20px;
+ padding:17px;
+ margin-top:18px;
+ line-height:1.8;
+ font-size:17px;
+}
+button{
+ width:100%;
+ padding:15px;
+ border:0;
+ border-radius:16px;
+ margin:7px 0;
+ font-size:16px;
+ cursor:pointer;
+}
+.primary{
+ background:#27765b;
+ color:white;
+}
+.option{
+ background:#eef4f0;
+ color:#17352b;
+}
+.option.selected{
+ background:#bfe4d1;
+ border:2px solid #27765b;
+}
+input,textarea,select{
+ width:100%;
+ padding:14px;
+ border:1px solid #ccd8d1;
+ border-radius:14px;
+ margin:7px 0;
+ font-size:16px;
+ background:white;
+}
+textarea{min-height:90px}
+.hidden{display:none}
+.progress{
+ height:7px;
+ background:#dfe8e2;
+ border-radius:20px;
+ overflow:hidden;
+ margin:15px 0;
+}
+.progress div{
+ height:100%;
+ background:#27765b;
+ width:10%;
+ transition:.3s;
+}
+.small{
+ font-size:13px;
+ color:#6a7b73;
+ line-height:1.5;
+}
+.today{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+.tile{
+ background:#eef7f1;
+ padding:16px;
+ border-radius:17px;
+ text-align:center;
+}
+nav{
+ display:flex;
+ justify-content:space-around;
+ margin-top:20px;
+ padding:14px;
+ background:white;
+ border-radius:20px;
+ font-size:12px;
+}
+h2{margin-top:5px}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="logo">⚖️ MIZAN | ميزان</div>
+
+<div class="progress">
+ <div id="bar"></div>
+</div>
+
+<!-- START -->
+<section id="s1" class="card">
+ <div class="avatar">🌿</div>
+ <div class="bubble">
+ أهلاً بك في <b>MIZAN</b> 🌿<br>
+ أنا هون عشان أمشي معك خطوة بخطوة.<br><br>
+ مش مهم عندي اسمك الحقيقي.<br>
+ المهم أعرفك، أعرف ظروفك، صحتك، والأهم:
+ <b>شو بدك تحقق؟</b>
+ </div>
+ <button class="primary" onclick="go(2)">يلا نبدأ</button>
+</section>
+
+<!-- GENDER -->
+<section id="s2" class="card hidden">
+ <div class="avatar" id="avatar">🙂</div>
+ <h2>أول شيء، عرّفني عنك</h2>
+ <p>ما هو جنسك؟</p>
+
+ <button class="option" onclick="gender('female',this)">أنا امرأة</button>
+ <button class="option" onclick="gender('male',this)">أنا رجل</button>
+ <button class="option" onclick="gender('none',this)">أفضل عدم التحديد</button>
+
+ <button class="primary" onclick="go(3)">التالي</button>
+</section>
+
+<!-- BODY -->
+<section id="s3" class="card hidden">
+ <div class="avatar" id="bodyAvatar">🙂</div>
+ <h2>خليني أعرف جسمك أكثر</h2>
+
+ <input id="age" type="number" placeholder="العمر">
+ <input id="height" type="number" placeholder="الطول بالسنتيمتر">
+ <input id="weight" type="number" placeholder="الوزن بالكيلو">
+
+ <button class="primary" onclick="go(4)">التالي</button>
+</section>
+
+<!-- HEALTH -->
+<section id="s4" class="card hidden">
+ <h2>صحتك جزء أساسي من خطتك ❤️</h2>
+ <p>اختار كل شيء ينطبق عليك:</p>
+
+ <button class="option multi" onclick="pick(this)">السكري</button>
+ <button class="option multi" onclick="pick(this)">ضغط الدم</button>
+ <button class="option multi" onclick="pick(this)">القلب أو الشرايين</button>
+ <button class="option multi" onclick="pick(this)">الغدة الدرقية</button>
+ <button class="option multi" onclick="pick(this)">النقرس</button>
+ <button class="option multi" onclick="pick(this)">الكلى</button>
+ <button class="option multi" onclick="pick(this)">الكبد</button>
+ <button class="option multi" onclick="pick(this)">تكيس المبايض</button>
+ <button class="option multi" onclick="pick(this)">الكوليسترول</button>
+ <button class="option multi" onclick="pick(this)">مشاكل الجهاز الهضمي</button>
+ <button class="option multi" onclick="pick(this)">حامل</button>
+ <button class="option multi" onclick="pick(this)">مرضع</button>
+
+ <textarea placeholder="مرض أو حالة أخرى تريد أن يعرفها MIZAN..."></textarea>
+
+ <p class="small">
+ MIZAN لا يشخّص الأمراض ولا يغيّر الأدوية أو جرعاتها. الحالات الطبية التي تحتاج متابعة يجب مناقشتها مع مختص صحي.
+ </p>
+
+ <button class="primary" onclick="go(5)">التالي</button>
+</section>
+
+<!-- EATING -->
+<section id="s5" class="card hidden">
+ <h2>كيف علاقتك مع الأكل؟ 🍽️</h2>
+
+ <button class="option multi" onclick="pick(this)">أحياناً آكل بشراهة أو أفقد السيطرة</button>
+ <button class="option multi" onclick="pick(this)">آكل عندما أكون متوتر/ة</button>
+ <button class="option multi" onclick="pick(this)">آكل من الملل</button>
+ <button class="option multi" onclick="pick(this)">آكل كثيراً بالليل</button>
+ <button class="option multi" onclick="pick(this)">عندي رغبة قوية بالحلويات</button>
+ <button class="option multi" onclick="pick(this)">الأكل مرتبط بمشاعري</button>
+ <button class="option multi" onclick="pick(this)">صعب أتحكم بكمية الأكل</button>
+
+ <textarea placeholder="شيء آخر تريد أن تخبرني به..."></textarea>
+
+ <button class="primary" onclick="go(6)">التالي</button>
+</section>
+
+<!-- GOAL -->
+<section id="s6" class="card hidden">
+ <div class="avatar">🎯</div>
+ <h2>هسا أهم سؤال</h2>
+ <p><b>شو هدفك؟</b></p>
+
+ <select id="goal">
+  <option>تنزيل الوزن</option>
+  <option>المحافظة على الوزن</option>
+  <option>تحسين صحتي وطريقة أكلي</option>
+  <option>زيادة الحركة والنشاط</option>
+  <option>تنظيم الأكل بسبب حالة صحية</option>
+  <option>أشعر براحة أكبر مع جسمي</option>
+  <option>هدف آخر</option>
+ </select>
+
+ <textarea id="goalText"
+ placeholder="احكيلي بكلماتك أنت... شو بدك تحقق؟"></textarea>
+
+ <button class="primary" onclick="goalDone()">هذا هدفي</button>
+</section>
+
+<!-- LIFE -->
+<section id="s7" class="card hidden">
+ <h2>خليني أبني الخطة حول حياتك</h2>
+
+ <select>
+  <option>ميزانيتي للأكل محدودة</option>
+  <option>ميزانيتي متوسطة</option>
+  <option>الميزانية ليست مشكلة</option>
+ </select>
+
+ <select>
+  <option>عندي وقت قليل جداً للطبخ</option>
+  <option>عندي وقت متوسط</option>
+  <option>أحب الطبخ وعندي وقت</option>
+ </select>
+
+ <textarea placeholder="شو الأكل الموجود عندك بالبيت اليوم؟"></textarea>
+
+ <textarea placeholder="هل في ظروف بحياتك لازم أعرفها؟ أطفال، عمل، دراسة، نوم، ضغط..."></textarea>
+
+ <button class="primary" onclick="finish()">ابني يومي مع MIZAN</button>
+</section>
+
+<!-- DASHBOARD -->
+<section id="home" class="card hidden">
+
+ <div class="avatar" id="finalAvatar">🌿</div>
+
+ <div class="bubble" id="message">
+ فهمتك. رح أبني الخطة حول حياتك أنت، مش حول جدول جاهز.
+ </div>
+
+ <h2>يومي اليوم</h2>
+
+ <div class="today">
+  <div class="tile">🥣<br><b>وجباتي</b><br>خطة مرنة</div>
+  <div class="tile">💧<br><b>الماء</b><br>تابع شربك</div>
+  <div class="tile">🚶<br><b>الحركة</b><br>خطوة بسيطة</div>
+  <div class="tile">🍎<br><b>سناك</b><br>حسب يومك</div>
+ </div>
+
+ <div class="bubble">
+ إذا اليوم ما مشي مثل ما خططنا، ما في فشل ولا رجوع لليوم الأول.
+ <b>بنعدّل ونكمّل.</b> 🌱
+ </div>
+
+ <button class="primary" onclick="talk()">💬 احكي مع MIZAN</button>
+
+ <div id="chat" class="hidden">
+  <textarea id="chatText" placeholder="مثلاً: أنا جوعانة، شو آكل؟"></textarea>
+  <button class="primary" onclick="reply()">إرسال</button>
+  <div id="answer" class="bubble hidden"></div>
+ </div>
+
+ <nav>
+  <span>🏠<br>اليوم</span>
+  <span>🍽️<br>الأكل</span>
+  <span>💬<br>اسأل MIZAN</span>
+  <span>📈<br>تقدمي</span>
+  <span>👤<br>ملفي</span>
+ </nav>
+
+</section>
+
+</div>
+
+<script>
+let sex="none";
+
+function go(n){
+ document.querySelectorAll("section").forEach(x=>x.classList.add("hidden"));
+ document.getElementById("s"+n).classList.remove("hidden");
+ document.getElementById("bar").style.width=(n*13)+"%";
+ window.scrollTo(0,0);
+}
+
+function gender(g,b){
+ sex=g;
+ document.querySelectorAll("#s2 .option").forEach(x=>x.classList.remove("selected"));
+ b.classList.add("selected");
+
+ let a="🙂";
+ if(g==="female") a="👩";
+ if(g==="male") a="👨";
+
+ document.getElementById("avatar").innerText=a;
+ document.getElementById("bodyAvatar").innerText=a;
+ document.getElementById("finalAvatar").innerText=a;
+}
+
+function pick(x){
+ x.classList.toggle("selected");
+}
+
+function goalDone(){
+ go(7);
+}
+
+function finish(){
+ document.querySelectorAll("section").forEach(x=>x.classList.add("hidden"));
+ document.getElementById("home").classList.remove("hidden");
+ document.getElementById("bar").style.width="100%";
+
+ let goal=document.getElementById("goal").value;
+ let custom=document.getElementById("goalText").value;
+
+ document.getElementById("message").innerHTML=
+ "فهمتك 🌿 هدفك هو <b>"+goal+"</b>."+
+ (custom ? "<br>"+custom : "")+
+ "<br><br>من هسا رح نخلي خطتك تتغيّر مع حياتك، وليس حياتك مع الخطة.";
+ window.scrollTo(0,0);
+}
+
+function talk(){
+ document.getElementById("chat").classList.toggle("hidden");
+}
+
+function reply(){
+ let q=document.getElementById("chatText").value;
+ let a=document.getElementById("answer");
+ a.classList.remove("hidden");
+
+ if(!q.trim()){
+  a.innerText="احكيلي شو صار معك اليوم 🌿";
+  return;
+ }
+
+ a.innerHTML=
+ "أنا معك 🌿 فهمت إنك بتقول/ي: <b>"+q+"</b><br><br>"+
+ "هاي النسخة الأولى من MIZAN. لاحقاً رح نربط هذا المكان بالذكاء الاصطناعي حتى أقدر أفهم حالتك وأرد عليك بشكل شخصي وآمن.";
+}
+</script>
+
+</body>
+</html>
