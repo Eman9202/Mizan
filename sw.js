@@ -1,4 +1,4 @@
-const CACHE='mizan-v10-runtime-hotfix';
+const CACHE='mizan-v11-premium-ui';
 const CORE=['./','./index.html','./manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('mizan-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
