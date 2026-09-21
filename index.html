@@ -43,6 +43,25 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .cooking-stage .stage-inner{background:linear-gradient(160deg,#173d35,#285f52)}.cook-dish{font-size:92px;filter:drop-shadow(0 16px 24px #0005);animation:cookFloat 3s ease-in-out infinite}.cooking-stage .card{color:var(--ink);font-size:18px;line-height:1.8;text-align:right}@keyframes cookFloat{50%{transform:translateY(-7px) rotate(2deg)}}
 .live-greeting{position:absolute;z-index:4;top:22px;left:50%;transform:translateX(-50%);max-width:min(88vw,620px);padding:10px 16px;border-radius:18px;background:#0007;color:white;text-align:center;font-weight:800;backdrop-filter:blur(8px)}.live-greeting:empty{display:none}
 body:has(.workout-stage.active){overflow:hidden}
+
+/* MIZAN premium interior — release visual system */
+:root{--surface:#fffefa;--soft:#f4f1e8;--sage:#e9f0e8}
+body{background:radial-gradient(circle at 10% 0,#eef5ec 0,transparent 34%),linear-gradient(180deg,#faf7ef,#f3f5ef);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.app{max-width:760px;margin:auto;padding-bottom:112px}
+.top{border-radius:0 0 26px 26px;padding:16px 18px;background:#fffdf8e8;border-bottom:1px solid #e9e2d4;box-shadow:0 10px 30px #173d3510}
+.logo{font-size:30px;letter-spacing:.5px}.page{animation:pageIn .28s ease}.page.active{display:block}@keyframes pageIn{from{opacity:.3;transform:translateY(7px)}}
+.card,.feature-hero,.plan-card{border:1px solid #e8e2d6;box-shadow:0 12px 34px #173d3510;border-radius:26px}
+.hero{background:linear-gradient(145deg,#174d40,#285f52)!important;color:#fff;overflow:hidden}.hero p,.hero small{color:#eef6f2}
+.avatar-wrap{border:4px solid #fff8;box-shadow:0 14px 32px #071f1a35}.avatar{object-fit:cover}
+.journey-chip{min-height:82px;display:flex;flex-direction:column;justify-content:center;border-radius:22px;font-size:13px;box-shadow:0 7px 18px #173d350b}
+#nextBestCard{background:linear-gradient(135deg,#f5f0df,#edf3e9);border-right:5px solid var(--green)}
+.primary{min-height:50px;border-radius:16px;font-weight:850;box-shadow:0 8px 18px #173d3520}.secondary{min-height:46px;border-radius:15px;font-weight:750}
+.bottom{left:50%;transform:translateX(-50%);width:min(calc(100% - 22px),720px);bottom:10px;border:1px solid #e7e0d4;border-radius:28px;background:#fffefaf2;box-shadow:0 18px 45px #173d3525;backdrop-filter:blur(18px)}
+.nav{border-radius:20px;padding:9px 5px}.nav.active{background:#eaf1e9;color:#174d40}.nav.active span{transform:scale(1.12)}
+#mealsPage .plan-card,#workoutsPage .plan-card{background:#fffefa}.metric{border-radius:22px;background:linear-gradient(145deg,#fff,#f1f5ee)}
+#progressPage .card{background:#fffefa}
+input,textarea,select{border-radius:15px!important;border:1px solid #dcd8cf!important;background:#fff!important;min-height:46px}
+@media(max-width:480px){.top{margin:0 -11px}.card,.feature-hero,.plan-card{border-radius:24px}.hero{padding:20px}.bottom{width:calc(100% - 16px)}}
 </style>
 <script src="https://unpkg.com/@tavus/embed@latest"></script>
 </head>
@@ -154,6 +173,7 @@ body:has(.workout-stage.active){overflow:hidden}
   const DATA_VERSION=2;const store={get(k,d){try{return JSON.parse(localStorage.getItem("mizan_"+k))??d}catch{return d}},set(k,v){localStorage.setItem("mizan_"+k,JSON.stringify(v))}};
   let profile=store.get("profile",{}), stats=store.get("stats",{water:0,walk:0,checks:0,date:""}), sound=false;
   let effects=store.get("effects",true),audioCtx=null;
+  let prefs=store.get('prefs',{muteAll:false,voice:true,effects:effects,haptics:true,notificationSound:true});
   function tone(kind="tap"){if(!effects)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const now=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();const map={tap:[420,.035,.025],nav:[520,.055,.035],success:[660,.13,.055],start:[500,.11,.05],finish:[784,.22,.07],warn:[240,.15,.055]};const [hz,dur,vol]=map[kind]||map.tap;o.type=kind==="warn"?"triangle":"sine";o.frequency.setValueAtTime(hz,now);if(kind==="success"||kind==="finish")o.frequency.exponentialRampToValueAtTime(hz*1.35,now+dur);g.gain.setValueAtTime(.001,now);g.gain.exponentialRampToValueAtTime(vol,now+.008);g.gain.exponentialRampToValueAtTime(.001,now+dur);o.connect(g);g.connect(audioCtx.destination);o.start(now);o.stop(now+dur+.02);if(navigator.vibrate&&(typeof prefs==="undefined"||(!prefs.muteAll&&prefs.haptics!==false))&&["success","finish","warn"].includes(kind))navigator.vibrate(kind==="warn"?[35,40,35]:25)}catch{}}
   function soundState(){const b=$("#effectsBtn");if(b)b.textContent=effects?"🔔 المؤثرات: تعمل":"🔕 المؤثرات: متوقفة"}
   const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)};
@@ -245,18 +265,17 @@ function setCoachState(s){const el=$('#coachState');if(el)el.textContent=s;const
   function loadReminders(){['water','meal','move','sleep'].forEach(k=>{const t=$('#'+k+'Reminder'),on=$('#'+k+'ReminderOn');if(t)t.value=reminders[k]?.time||reminderDefaults[k].time;if(on)on.checked=!!reminders[k]?.on});const s=$('#notifyStatus');if(s&&'Notification'in window)s.textContent=Notification.permission==='granted'?'✅ إشعارات الهاتف مفعّلة':Notification.permission==='denied'?'الإشعارات مرفوضة من إعدادات المتصفح':'فعّلي الإشعارات ليتمكن ميزان من تنبيهك.';if($('#medName'))$('#medName').value=reminders.med?.name||'';if($('#medTime'))$('#medTime').value=reminders.med?.time||'';if($('#medOn'))$('#medOn').checked=!!reminders.med?.on}
   async function notify(title,body,tag){if(Notification.permission!=='granted')return;try{const reg=await navigator.serviceWorker?.ready;if(reg)reg.showNotification(title,{body,icon:'assets/icon-192.png',tag})}catch{}}
   if($('#enableNotifications'))$('#enableNotifications').onclick=async()=>{if(!('Notification'in window))return toast('هذا المتصفح لا يدعم إشعارات الويب');const p=await Notification.requestPermission();loadReminders();tone(p==='granted'?'success':'warn');toast(p==='granted'?'تم تفعيل الإشعارات 🔔':'يمكنك تغيير إذن الإشعارات من إعدادات المتصفح')};
-  $('#saveReminders').onclick=()=>{['water','meal','move','sleep'].forEach(k=>reminders[k]={on:$('#'+k+'ReminderOn').checked,time:$('#'+k+'Reminder').value});reminders.med={on:!!$('#medOn')?.checked,time:$('#medTime')?.value||'',name:$('#medName')?.value.trim()||''};store.set('reminders',reminders);tone('success');toast('تم حفظ التذكيرات')};
+  if($('#saveReminders'))$('#saveReminders').onclick=()=>{['water','meal','move','sleep'].forEach(k=>reminders[k]={on:$('#'+k+'ReminderOn').checked,time:$('#'+k+'Reminder').value});reminders.med={on:!!$('#medOn')?.checked,time:$('#medTime')?.value||'',name:$('#medName')?.value.trim()||''};store.set('reminders',reminders);tone('success');toast('تم حفظ التذكيرات')};
   setInterval(()=>{const now=new Date(),hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'),day=now.toISOString().slice(0,10);const msgs={water:['💧 وقت الماء','كوب ماء الآن خطوة صغيرة مفيدة.'],meal:['🥗 وقت وجبتك','اختاري وجبة متوازنة تناسب خطتك.'],move:['🏃 وقت الحركة','حتى دقائق قليلة من الحركة تُحسب.'],sleep:['🌙 وقت الهدوء','ابدئي الاستعداد لنوم أهدأ.'],med:['💊 تذكير الدواء',reminders.med?.name?('موعد '+reminders.med.name+' حسب الجدول الذي أدخلته.'):'موعد الدواء حسب الجدول الذي أدخلته.']};Object.keys(msgs).forEach(k=>{if(reminders[k]?.on&&reminders[k].time===hm&&store.get('last_'+k,'')!==day+'-'+hm){store.set('last_'+k,day+'-'+hm);notify(msgs[k][0],msgs[k][1],'mizan-'+k);if(typeof prefs==='undefined'||(!prefs.muteAll&&prefs.notificationSound!==false))tone('success')}})},30000);
   if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
   loadReminders();renderPlans();
-  let prefs=store.get('prefs',{muteAll:false,voice:true,effects:effects,haptics:true,notificationSound:true});
   sound=!prefs.muteAll&&!!prefs.voice;effects=!prefs.muteAll&&!!prefs.effects;
   function renderPrefs(){const m=$('#muteAllPref'),v=$('#voicePref'),e=$('#effectsPref'),h=$('#hapticPref'),n=$('#notificationSoundPref');if(m)m.checked=!!prefs.muteAll;if(v)v.checked=!!prefs.voice;if(e)e.checked=!!prefs.effects;if(h)h.checked=!!prefs.haptics;if(n)n.checked=prefs.notificationSound!==false}
   ['muteAllPref','voicePref','effectsPref','hapticPref','notificationSoundPref'].forEach(id=>{const el=$('#'+id);if(el)el.onchange=()=>{prefs={muteAll:!!$('#muteAllPref')?.checked,voice:!!$('#voicePref')?.checked,effects:!!$('#effectsPref')?.checked,haptics:!!$('#hapticPref')?.checked,notificationSound:!!$('#notificationSoundPref')?.checked};sound=!prefs.muteAll&&prefs.voice;effects=!prefs.muteAll&&prefs.effects;store.set('prefs',prefs);store.set('effects',effects);soundState();if(!prefs.muteAll&&prefs.effects)tone('success')}});
   if($('#exportLocalData'))$('#exportLocalData').onclick=()=>{const payload={exportedAt:new Date().toISOString(),profile:store.get('profile',{}),stats:store.get('stats',{}),plans:store.get('plans',[]),measurements:store.get('measurements',[]),reminders:store.get('reminders',{})};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mizan-data-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);tone('success');toast('تم تجهيز نسخة بياناتك')};
   if($('#clearLocalData'))$('#clearLocalData').onclick=()=>{if(confirm('هل تريدين مسح ملفك وخططك وتذكيراتك من هذا الجهاز؟')){Object.keys(localStorage).filter(k=>k.startsWith('mizan_')).forEach(k=>localStorage.removeItem(k));location.href=location.pathname+'?start'}};
   renderPrefs();
-  const eb=$('#effectsBtn');if(eb){soundState();eb.onclick=()=>{effects=!effects;store.set('effects',effects);soundState();if(effects)tone('success')}}document.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(b&&!b.matches('#effectsBtn,.start-timer,#safeWorkout,#addWater,#saveWalk,#saveWin,#walkingCompanion,#saveMeasurement,#saveReminders,#enableNotifications,#cookNext,#cookPrev,#closeCooking'))tone('tap')},{passive:true});store.set('data_version',DATA_VERSION);loadProfile();newDay();renderDailyPath();renderNextBest();document.body.dataset.mode='dashboard';$('#winInput').value=store.get('win','');const restartOnboarding=new URLSearchParams(location.search).has('start');if(!profile.onboarded||restartOnboarding){$('#onboarding').classList.remove('hide');renderOn()}
+  const eb=$('#effectsBtn');if(eb){soundState();eb.onclick=()=>{effects=!effects;store.set('effects',effects);soundState();if(effects)tone('success')}}document.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(b&&!b.matches('#effectsBtn,.start-timer,#safeWorkout,#addWater,#saveWalk,#saveWin,#walkingCompanion,#saveMeasurement,#saveReminders,#enableNotifications,#cookNext,#cookPrev,#closeCooking'))tone('tap')},{passive:true});store.set('data_version',DATA_VERSION);loadProfile();newDay();renderDailyPath();renderNextBest();document.body.dataset.mode='dashboard';if($('#winInput'))$('#winInput').value=store.get('win','');const restartOnboarding=new URLSearchParams(location.search).has('start');if(!profile.onboarded||restartOnboarding){$('#onboarding').classList.remove('hide');renderOn()}
 })();
 document.addEventListener('click',e=>{if(e.target&&e.target.id==='closeVoiceStage')stopAI()});
 </script>
@@ -274,5 +293,7 @@ document.addEventListener('click',e=>{if(e.target&&e.target.id==='closeVoiceStag
 #stageAvatar.listening{animation:stageListen 1.5s ease-in-out infinite}
 @keyframes stageTalk{0%,100%{transform:scale(1)}30%{transform:translateY(-5px) rotate(-1deg) scale(1.025)}65%{transform:translateY(2px) rotate(1deg) scale(1.035)}}
 @keyframes stageListen{0%,100%{transform:scale(1)}50%{transform:translateY(-4px) rotate(-.7deg) scale(1.018)}}
-</style></body>
+</style><script>
+window.addEventListener('error',function(e){console.error('MIZAN runtime:',e.error||e.message);const t=document.getElementById('toast');if(t){t.textContent='حدث خلل بسيط. أعيدي تحميل MIZAN.';t.classList.add('show')}});
+</script></body>
 </html>
