@@ -58,3 +58,31 @@ test('service worker bypasses external tokens and no-store requests',()=>{
 });
 
 test('voice fallback opens chat and starts browser recognition without paid requests',async()=>{const a=boot();await a.select('#aiVoiceBtn').onclick();assert.equal(a.requests,0);assert.equal(a.fetches,0);assert(a.select('#chatPage').classList.contains('active'));const start=[...a.timers.values()].find(t=>t.ms===180);assert(start);start.fn();assert(a.recognition);assert.equal(a.select('#micBtn')['aria-pressed'],'true');assert(!a.select('#voiceStage').classList.contains('active'))});
+
+test('safety routing precedes ordinary food and language fallback',()=>{
+ const a=boot();a.select('#language').value='en';
+ const reply=a.context.coachReply('I have chest pain and want dinner');
+ assert.match(reply,/safety comes first/i);
+ assert.doesNotMatch(reply,/breakfast|lunch|dinner/i);
+});
+
+test('medical boundary is localized outside Arabic',()=>{
+ const a=boot();a.select('#language').value='sv';
+ const reply=a.context.coachReply('Kan du ändra min medicin och dosering?');
+ assert.match(reply,/MIZAN är för välmående och livsstil/);
+ assert.match(reply,/inte diagnos|ställer inte diagnos/);
+});
+
+test('teen weight-pressure requests get wellbeing guard',()=>{
+ const a=boot();a.context.profile.age=15;a.select('#language').value='en';
+ const reply=a.context.coachReply('I want rapid weight loss and calorie targets');
+ assert.match(reply,/energy, sleep, balanced food/i);
+ assert.doesNotMatch(reply,/calorie target/i);
+});
+
+test('external AI prompt uses minimum context rather than full health context',()=>{
+ const a=boot();a.context.profile={age:30,goal:'wellness',health:'private full health note',mental:'private mental note',country:'SE',language:'en'};
+ const prompt=a.context.contextualPrompt('hello');
+ assert.match(prompt,/age|العمر/i);
+ assert.doesNotMatch(prompt,/private full health note|private mental note/);
+});
