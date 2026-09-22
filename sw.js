@@ -1,7 +1,15 @@
-const CACHE='mizan-v23-sv-bs-complete-ui';
+const CACHE='mizan-v24-fresh-ui';
 const CORE=['./','./index.html','./manifest.webmanifest','./assets/locales/sv-bs.js','./assets/i18n.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('mizan-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==self.location.origin||e.request.cache==='no-store')return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{}))}return r}).catch(()=>caches.match(e.request).then(r=>r||(e.request.mode==='navigate'?caches.match('./index.html'):Response.error()))))});
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==self.location.origin||e.request.cache==='no-store')return;
+  const isNavigation=e.request.mode==='navigate';
+  const isAppCode=/\.(?:html|js|css|webmanifest)$/.test(new URL(e.request.url).pathname);
+  if(isNavigation||isAppCode){
+    e.respondWith(fetch(e.request,{cache:'no-store'}).then(r=>{if(r.ok){const copy=r.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{}))}return r}).catch(()=>caches.match(e.request).then(r=>r||(isNavigation?caches.match('./index.html'):Response.error()))));
+    return;
+  }
+  e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{}))}return r})));
+});
 self.addEventListener('notificationclick',e=>{e.notification.close();e.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(cs=>cs[0]?cs[0].focus():self.clients.openWindow('./')))});
 self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{}}catch{d={body:e.data?.text()}}e.waitUntil(self.registration.showNotification(d.title||'MIZAN | ميزان',{body:d.body||'لديك تذكير من ميزان 🌿',icon:'assets/icon-192.png',badge:'assets/icon-192.png',tag:d.tag||'mizan-reminder',data:d.data||{}}))});
