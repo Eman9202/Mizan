@@ -130,6 +130,7 @@ html[dir="ltr"] .plan-card ul,html[dir="ltr"] .plan-card ol{padding-left:22px;pa
 
   <section class="page" id="chatPage">
     <div class="section-title"><h2>محادثة مع ميزان</h2><button id="clearChat">مسح</button></div>
+    <div class="tiny-note" id="aiCoachNote" style="margin:-4px 0 10px">✨ MIZAN AI Coach • رفيق رقمي للعافية والعادات اليومية</div>
     <div class="card chat-box" id="chat"><div class="msg ai">أهلًا 🌿 أنا ميزان. بإمكانك الكتابة أو الضغط على الميكروفون. ابدئي بما يشغلك اليوم، وسأسألك سؤالًا واحدًا كل مرة.</div></div>
     <div class="chips"><button data-prompt="أريد خطة بداية مناسبة لي">ابدأ معي</button><button data-prompt="ماذا أطبخ اليوم؟">طبخ اليوم</button><button data-prompt="أريد حركة خفيفة">حركة خفيفة</button><button data-prompt="أشعر بألم">عندي ألم</button></div>
     <div class="composer"><button id="micBtn" aria-label="الميكروفون">🎙️</button><textarea id="message" rows="1" placeholder="اكتبي هنا..."></textarea><button class="send" id="sendBtn" aria-label="إرسال">➤</button></div>
@@ -369,7 +370,9 @@ de:{journey:['Ernährung','Bewegung','Fortschritt'],help:'Wie kann ich helfen?',
 es:{journey:['Alimentación','Movimiento','Progreso'],help:'¿Cómo puedo ayudarte?',weekly:'Progreso esta semana',details:'Detalles',chatTitle:'Chat con MIZAN',clear:'Borrar',placeholder:'Escribe aquí...',plansHero:'Mis planes',plansSub:'Tus planes guardados quedan organizados aquí.'},
 bs:{journey:['Ishrana','Kretanje','Napredak'],help:'Kako ti mogu pomoći?',weekly:'Napredak ove sedmice',details:'Detalji',chatTitle:'Razgovor s MIZAN-om',clear:'Obriši',placeholder:'Piši ovdje...',plansHero:'Moji planovi',plansSub:'Svi sačuvani planovi ostaju uredno na jednom mjestu.'}
 };
-function applyFullLanguage(lang){
+  const aiCoachLabels={ar:'✨ MIZAN AI Coach • رفيق رقمي للعافية والعادات اليومية',sv:'✨ MIZAN AI Coach • Din digitala följeslagare för välmående och vardagsvanor',en:'✨ MIZAN AI Coach • Your digital companion for wellness and everyday habits',tr:'✨ MIZAN AI Coach • İyi yaşam ve günlük alışkanlıklar için dijital yol arkadaşınız',fr:'✨ MIZAN AI Coach • Votre compagnon numérique pour le bien-être et les habitudes quotidiennes',de:'✨ MIZAN AI Coach • Dein digitaler Begleiter für Wohlbefinden und Alltagsgewohnheiten',es:'✨ MIZAN AI Coach • Tu compañero digital para bienestar y hábitos cotidianos',bs:'✨ MIZAN AI Coach • Vaš digitalni saputnik za dobrobit i svakodnevne navike'};
+
+function applyFullLanguage(lang){const coachNote=$('#aiCoachNote');if(coachNote)coachNote.textContent=aiCoachLabels[lang]||aiCoachLabels.en;
  const dict={
  sv:{'برامجي':'Planer','الرئيسية':'Hem','الوجبات':'Måltider','ميزان':'MIZAN','التمارين':'Träning','تقدمي':'Framsteg','ملفي':'Profil','فتح الإعدادات':'Öppna inställningar','فتح التذكيرات':'Öppna påminnelser','فتح الوجبات':'Öppna måltider','فتح التمارين':'Öppna träning','حفظ الملف':'Spara profil','السابق':'Tillbaka','التالي':'Nästa','مسح بيانات MIZAN من هذا الجهاز':'Radera MIZAN-data från enheten'},
  en:{'برامجي':'Plans','الرئيسية':'Home','الوجبات':'Meals','ميزان':'MIZAN','التمارين':'Workouts','تقدمي':'Progress','ملفي':'Profile','فتح الإعدادات':'Open settings','فتح التذكيرات':'Open reminders','فتح الوجبات':'Open meals','فتح التمارين':'Open workouts','حفظ الملف':'Save profile','السابق':'Back','التالي':'Next','مسح بيانات MIZAN من هذا الجهاز':'Delete MIZAN data from this device'},
