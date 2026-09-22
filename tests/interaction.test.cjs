@@ -32,7 +32,7 @@ function boot(options={}){
   let recognition, stopped=0, requests=0, fetches=0, resolveMedia, channel;
   const stream={getTracks:()=>[{stop(){stopped++}}]};
   class Recognition{constructor(){recognition=this}start(){} stop(){this.onend?.()}abort(){this.onend?.()}}
-  const context={console:{error(){}},URLSearchParams,AbortController,Date,Math,JSON,Number,String,Error,location:{search:''},scrollTo(){},
+  const context={__MIZAN_TEST__:true,console:{error(){}},URLSearchParams,AbortController,Date,Math,JSON,Number,String,Error,location:{search:''},scrollTo(){},
     document:{getElementById:id=>select("#"+id),querySelector:select,querySelectorAll:all,createElement:element,body:element('body'),documentElement:element('html'),addEventListener(k,v){events[k]=v}},
     localStorage:{getItem:k=>storage.get(k)??null,setItem(k,v){if(options.storageDenied)throw Error('quota');storage.set(k,v)}},
     navigator:{mediaDevices:{getUserMedia(){requests++;if(options.mediaDenied)return Promise.reject(Object.assign(Error('denied'),{name:'NotAllowedError'}));if(options.pendingMedia)return new Promise(r=>resolveMedia=r);return Promise.resolve(stream)}}},
@@ -41,7 +41,7 @@ function boot(options={}){
     RTCPeerConnection:class {addTrack(){} createDataChannel(){channel={readyState:'open',send(){},close(){}};return channel}async createOffer(){return {sdp:'mock-offer'}}async setLocalDescription(){}async setRemoteDescription(){channel.onopen()}close(){}},
     fetch:async()=>{fetches++;return options.connected?{ok:true,json:async()=>({value:'test-token'}),text:async()=>'mock-answer'}:{ok:false}},addEventListener(k,v){events[k]=v}};
   context.window=context;vm.createContext(context);scripts.forEach(s=>vm.runInContext(s,context));
-  return {nodes,select,events,timers,intervals,storage,timer,nav,context,get channel(){return channel},get recognition(){return recognition},get stopped(){return stopped},get requests(){return requests},get fetches(){return fetches},resolveMedia(){resolveMedia(stream)}};
+  return {nodes,select,events,timers,intervals,storage,timer,nav,context,get app(){return context.__mizanTest},get channel(){return channel},get recognition(){return recognition},get stopped(){return stopped},get requests(){return requests},get fetches(){return fetches},resolveMedia(){resolveMedia(stream)}};
 }
 test('startup binds microphone, onboarding and profile after timer registration',()=>{const a=boot();for(const id of ['micBtn','onNext','saveProfile','addWater'])assert.equal(typeof a.select('#'+id).onclick,'function');});
 test('navigation updates active page and body mode',()=>{const a=boot();a.nav[1].onclick();assert(a.select('#chatPage').classList.contains('active'));assert.equal(a.context.document.body.dataset.mode,'conversation')});
@@ -58,3 +58,31 @@ test('service worker bypasses external tokens and no-store requests',()=>{
 });
 
 test('voice fallback opens chat and starts browser recognition without paid requests',async()=>{const a=boot();await a.select('#aiVoiceBtn').onclick();assert.equal(a.requests,0);assert.equal(a.fetches,0);assert(a.select('#chatPage').classList.contains('active'));const start=[...a.timers.values()].find(t=>t.ms===180);assert(start);start.fn();assert(a.recognition);assert.equal(a.select('#micBtn')['aria-pressed'],'true');assert(!a.select('#voiceStage').classList.contains('active'))});
+
+test('safety routing precedes ordinary food and language fallback',()=>{
+ const a=boot();a.select('#language').value='en';
+ const reply=a.app.coachReply('I have chest pain and want dinner');
+ assert.match(reply,/safety comes first/i);
+ assert.doesNotMatch(reply,/breakfast|lunch|dinner/i);
+});
+
+test('medical boundary is localized outside Arabic',()=>{
+ const a=boot();a.select('#language').value='sv';
+ const reply=a.app.coachReply('Kan du ändra min medicin och dosering?');
+ assert.match(reply,/MIZAN är för välmående och livsstil/);
+ assert.match(reply,/inte diagnos|ställer inte diagnos/);
+});
+
+test('teen weight-pressure requests get wellbeing guard',()=>{
+ const a=boot();a.app.profile={...a.app.profile,age:15};a.select('#language').value='en';
+ const reply=a.app.coachReply('I want rapid weight loss and calorie targets');
+ assert.match(reply,/energy, sleep, balanced food/i);
+ assert.doesNotMatch(reply,/calorie target/i);
+});
+
+test('external AI prompt uses minimum context rather than full health context',()=>{
+ const a=boot();a.app.profile={age:30,goal:'wellness',health:'private full health note',mental:'private mental note',country:'SE',language:'en'};
+ const prompt=a.app.contextualPrompt('hello');
+ assert.match(prompt,/age|العمر/i);
+ assert.doesNotMatch(prompt,/private full health note|private mental note/);
+});
