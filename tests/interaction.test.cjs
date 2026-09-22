@@ -41,7 +41,9 @@ function boot(options={}){
     RTCPeerConnection:class {addTrack(){} createDataChannel(){channel={readyState:'open',send(){},close(){}};return channel}async createOffer(){return {sdp:'mock-offer'}}async setLocalDescription(){}async setRemoteDescription(){channel.onopen()}close(){}},
     fetch:async()=>{fetches++;return options.connected?{ok:true,json:async()=>({value:'test-token'}),text:async()=>'mock-answer'}:{ok:false}},addEventListener(k,v){events[k]=v}};
   context.window=context;vm.createContext(context);scripts.forEach(s=>vm.runInContext(s,context));
-  return {nodes,select,events,timers,intervals,storage,timer,nav,context,get channel(){return channel},get recognition(){return recognition},get stopped(){return stopped},get requests(){return requests},get fetches(){return fetches},resolveMedia(){resolveMedia(stream)}};
+  // Test-only bridge: top-level lexical declarations in the app are not properties of the VM global.
+  context.__mizanTest=vm.runInContext(`({coachReply,contextualPrompt,get profile(){return profile},set profile(v){profile=v}})`,context);
+  return {nodes,select,events,timers,intervals,storage,timer,nav,context,get app(){return context.__mizanTest},get channel(){return channel},get recognition(){return recognition},get stopped(){return stopped},get requests(){return requests},get fetches(){return fetches},resolveMedia(){resolveMedia(stream)}};
 }
 test('startup binds microphone, onboarding and profile after timer registration',()=>{const a=boot();for(const id of ['micBtn','onNext','saveProfile','addWater'])assert.equal(typeof a.select('#'+id).onclick,'function');});
 test('navigation updates active page and body mode',()=>{const a=boot();a.nav[1].onclick();assert(a.select('#chatPage').classList.contains('active'));assert.equal(a.context.document.body.dataset.mode,'conversation')});
@@ -61,28 +63,28 @@ test('voice fallback opens chat and starts browser recognition without paid requ
 
 test('safety routing precedes ordinary food and language fallback',()=>{
  const a=boot();a.select('#language').value='en';
- const reply=a.context.coachReply('I have chest pain and want dinner');
+ const reply=a.app.coachReply('I have chest pain and want dinner');
  assert.match(reply,/safety comes first/i);
  assert.doesNotMatch(reply,/breakfast|lunch|dinner/i);
 });
 
 test('medical boundary is localized outside Arabic',()=>{
  const a=boot();a.select('#language').value='sv';
- const reply=a.context.coachReply('Kan du ändra min medicin och dosering?');
+ const reply=a.app.coachReply('Kan du ändra min medicin och dosering?');
  assert.match(reply,/MIZAN är för välmående och livsstil/);
  assert.match(reply,/inte diagnos|ställer inte diagnos/);
 });
 
 test('teen weight-pressure requests get wellbeing guard',()=>{
- const a=boot();a.context.profile.age=15;a.select('#language').value='en';
- const reply=a.context.coachReply('I want rapid weight loss and calorie targets');
+ const a=boot();a.app.profile={...a.app.profile,age:15};a.select('#language').value='en';
+ const reply=a.app.coachReply('I want rapid weight loss and calorie targets');
  assert.match(reply,/energy, sleep, balanced food/i);
  assert.doesNotMatch(reply,/calorie target/i);
 });
 
 test('external AI prompt uses minimum context rather than full health context',()=>{
- const a=boot();a.context.profile={age:30,goal:'wellness',health:'private full health note',mental:'private mental note',country:'SE',language:'en'};
- const prompt=a.context.contextualPrompt('hello');
+ const a=boot();a.app.profile={age:30,goal:'wellness',health:'private full health note',mental:'private mental note',country:'SE',language:'en'};
+ const prompt=a.app.contextualPrompt('hello');
  assert.match(prompt,/age|العمر/i);
  assert.doesNotMatch(prompt,/private full health note|private mental note/);
 });
