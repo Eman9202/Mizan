@@ -32,7 +32,7 @@ function boot(options={}){
   let recognition, stopped=0, requests=0, fetches=0, resolveMedia, channel;
   const stream={getTracks:()=>[{stop(){stopped++}}]};
   class Recognition{constructor(){recognition=this}start(){} stop(){this.onend?.()}abort(){this.onend?.()}}
-  const context={console:{error(){}},URLSearchParams,AbortController,Date,Math,JSON,Number,String,Error,location:{search:''},scrollTo(){},
+  const context={__MIZAN_TEST__:true,console:{error(){}},URLSearchParams,AbortController,Date,Math,JSON,Number,String,Error,location:{search:''},scrollTo(){},
     document:{getElementById:id=>select("#"+id),querySelector:select,querySelectorAll:all,createElement:element,body:element('body'),documentElement:element('html'),addEventListener(k,v){events[k]=v}},
     localStorage:{getItem:k=>storage.get(k)??null,setItem(k,v){if(options.storageDenied)throw Error('quota');storage.set(k,v)}},
     navigator:{mediaDevices:{getUserMedia(){requests++;if(options.mediaDenied)return Promise.reject(Object.assign(Error('denied'),{name:'NotAllowedError'}));if(options.pendingMedia)return new Promise(r=>resolveMedia=r);return Promise.resolve(stream)}}},
@@ -41,8 +41,6 @@ function boot(options={}){
     RTCPeerConnection:class {addTrack(){} createDataChannel(){channel={readyState:'open',send(){},close(){}};return channel}async createOffer(){return {sdp:'mock-offer'}}async setLocalDescription(){}async setRemoteDescription(){channel.onopen()}close(){}},
     fetch:async()=>{fetches++;return options.connected?{ok:true,json:async()=>({value:'test-token'}),text:async()=>'mock-answer'}:{ok:false}},addEventListener(k,v){events[k]=v}};
   context.window=context;vm.createContext(context);scripts.forEach(s=>vm.runInContext(s,context));
-  // Test-only bridge: top-level lexical declarations in the app are not properties of the VM global.
-  context.__mizanTest=vm.runInContext(`({coachReply,contextualPrompt,get profile(){return profile},set profile(v){profile=v}})`,context);
   return {nodes,select,events,timers,intervals,storage,timer,nav,context,get app(){return context.__mizanTest},get channel(){return channel},get recognition(){return recognition},get stopped(){return stopped},get requests(){return requests},get fetches(){return fetches},resolveMedia(){resolveMedia(stream)}};
 }
 test('startup binds microphone, onboarding and profile after timer registration',()=>{const a=boot();for(const id of ['micBtn','onNext','saveProfile','addWater'])assert.equal(typeof a.select('#'+id).onclick,'function');});
