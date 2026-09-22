@@ -482,6 +482,9 @@ bs:[['Dobro došli u MIZAN 🌿','Izaberite jezik koji vam odgovara. Možete ga 
   const eb=$('#effectsBtn');if(eb){soundState();eb.onclick=()=>{effects=!effects;store.set('effects',effects);soundState();if(effects)tone('success')}}document.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(b&&!b.matches('#effectsBtn,.start-timer,#safeWorkout,#addWater,#saveWalk,#saveWin,#walkingCompanion,#saveMeasurement,#saveReminders,#enableNotifications,#cookNext,#cookPrev,#closeCooking'))tone('tap')},{passive:true});store.set('data_version',DATA_VERSION);loadProfile();newDay();renderDailyPath();renderNextBest();document.body.dataset.mode='dashboard';if($('#winInput'))$('#winInput').value=store.get('win','');const restartOnboarding=new URLSearchParams(location.search).has('start');if(!profile.onboarded||restartOnboarding){$('#onboarding').classList.remove('hide');renderOn()}
   document.addEventListener('click',e=>{if(e.target.closest('#closeVoiceStage'))stopAI()});
   window.addEventListener('pagehide',()=>{stopAI(false);recognition?.abort();clearInterval(timerId)});
+  // Expose a narrow bridge only inside the isolated regression-test runtime.
+  // This keeps profile data and internal helpers private in the published app.
+  if(window.__MIZAN_TEST__)window.__mizanTest={coachReply,contextualPrompt,get profile(){return profile},set profile(value){profile=value}};
 })();
 
 </script>
