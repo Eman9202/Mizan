@@ -14,7 +14,7 @@ function boot(options={}){
       classList:{add(...xs){xs.forEach(x=>classes.add(x))},remove(...xs){xs.forEach(x=>classes.delete(x))},contains:x=>classes.has(x),toggle(x,on){on=on??!classes.has(x);on?classes.add(x):classes.delete(x);return on}},
       style:{setProperty(k,v){this[k]=v},removeProperty(k){delete this[k]}},
       setAttribute(k,v){this[k]=v},removeAttribute(k){delete this[k]},
-      addEventListener(k,v){this['on'+k]=v},appendChild(x){this.children.push(x)},focus(){},pause(){},load(){},remove(){},play(){return Promise.resolve()},
+      addEventListener(k,v){this['on'+k]=v},appendChild(x){this.children.push(x)},focus(){},click(){this.onclick?.()},pause(){},load(){},remove(){},play(){return Promise.resolve()},
       closest(s){return s==='.workout-view'?view:element(s)},querySelector:s=>element(s),querySelectorAll:s=>all(s)};
     nodes.set(key,el);return el;
   }
@@ -33,7 +33,7 @@ function boot(options={}){
   const stream={getTracks:()=>[{stop(){stopped++}}]};
   class Recognition{constructor(){recognition=this}start(){} stop(){this.onend?.()}abort(){this.onend?.()}}
   const context={console:{error(){}},URLSearchParams,AbortController,Date,Math,JSON,Number,String,Error,location:{search:''},scrollTo(){},
-    document:{querySelector:select,querySelectorAll:all,createElement:element,body:element('body'),documentElement:element('html'),addEventListener(k,v){events[k]=v}},
+    document:{getElementById:id=>select("#"+id),querySelector:select,querySelectorAll:all,createElement:element,body:element('body'),documentElement:element('html'),addEventListener(k,v){events[k]=v}},
     localStorage:{getItem:k=>storage.get(k)??null,setItem(k,v){if(options.storageDenied)throw Error('quota');storage.set(k,v)}},
     navigator:{mediaDevices:{getUserMedia(){requests++;if(options.mediaDenied)return Promise.reject(Object.assign(Error('denied'),{name:'NotAllowedError'}));if(options.pendingMedia)return new Promise(r=>resolveMedia=r);return Promise.resolve(stream)}}},
     isSecureContext:true,SpeechRecognition:options.noSR?undefined:Recognition,
@@ -45,7 +45,7 @@ function boot(options={}){
 }
 test('startup binds microphone, onboarding and profile after timer registration',()=>{const a=boot();for(const id of ['micBtn','onNext','saveProfile','addWater'])assert.equal(typeof a.select('#'+id).onclick,'function');});
 test('navigation updates active page and body mode',()=>{const a=boot();a.nav[1].onclick();assert(a.select('#chatPage').classList.contains('active'));assert.equal(a.context.document.body.dataset.mode,'conversation')});
-test('onboarding completes and saves the profile',()=>{const a=boot();for(let i=0;i<6;i++)a.select('#onNext').onclick();assert(a.select('#onboarding').classList.contains('hide'));assert.equal(JSON.parse(a.storage.get('mizan_profile')).onboarded,true)});
+test('onboarding completes and saves the profile',()=>{const a=boot();a.select('#healthConsent').checked=true;for(let i=0;i<6;i++)a.select('#onNext').onclick();assert(a.select('#onboarding').classList.contains('hide'));assert.equal(JSON.parse(a.storage.get('mizan_profile')).onboarded,true)});
 test('workout starts, counts down and stops without undefined card',()=>{const a=boot();a.timer.onclick();assert(a.select('#workoutStage').classList.contains('active'));assert.equal(a.select('#workoutStageTimer').textContent,'01:00');[...a.intervals.values()].find(x=>x.ms===1000).fn();assert.equal(a.select('#workoutStageTimer').textContent,'00:59');a.select('#stopWorkout').onclick();assert(!a.select('#workoutStage').classList.contains('active'));assert(![...a.intervals.values()].some(x=>x.ms===1000))});
 test('microphone toggles and resets after permission error',()=>{const a=boot();a.select('#micBtn').onclick();assert.equal(a.select('#micBtn')['aria-pressed'],'true');a.recognition.onstart();assert(a.select('#avatar').classList.contains('listening'));a.recognition.onerror({error:'not-allowed'});assert.equal(a.select('#micBtn')['aria-pressed'],'false');assert.match(a.select('#homeStatus').textContent,/اسمحي/)});
 test('unsupported recognition keeps text input available',()=>{const a=boot({noSR:true});a.select('#micBtn').onclick();assert.match(a.select('#toast').textContent,/غير متاح/);assert.equal(typeof a.select('#sendBtn').onclick,'function')});
@@ -57,4 +57,4 @@ test('service worker bypasses external tokens and no-store requests',()=>{
  for(const request of [{method:'GET',url:'https://voice.example/token'},{method:'GET',url:'https://example.test/token',cache:'no-store'},{method:'POST',url:'https://example.test/session'}])listeners.fetch({request,respondWith(){assert.fail('must bypass service worker')}});
 });
 
-test('paused paid voice never requests media or tokens and opens text chat',async()=>{const a=boot();await a.select('#aiVoiceBtn').onclick();assert.equal(a.requests,0);assert.equal(a.fetches,0);assert(a.select('#chatPage').classList.contains('active'));assert.match(a.select('#homeStatus').textContent,/متوقفة مؤقتًا/);assert(!a.select('#voiceStage').classList.contains('active'))});
+test('voice fallback opens chat and starts browser recognition without paid requests',async()=>{const a=boot();await a.select('#aiVoiceBtn').onclick();assert.equal(a.requests,0);assert.equal(a.fetches,0);assert(a.select('#chatPage').classList.contains('active'));const start=[...a.timers.values()].find(t=>t.ms===180);assert(start);start.fn();assert(a.recognition);assert.equal(a.select('#micBtn')['aria-pressed'],'true');assert(!a.select('#voiceStage').classList.contains('active'))});

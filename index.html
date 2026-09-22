@@ -320,7 +320,7 @@ bs:{journey:['Ishrana','Kretanje','Napredak'],help:'Kako ti mogu pomoći?',weekl
 };
 function applyFullLanguage(lang){
  // Always translate from the original Arabic source so switching between non-Arabic languages stays consistent.
- $('button,a,label,option,h1,h2,h3,p,small').forEach(el=>{if(el.children.length===0){if(!el.dataset.i18nSource && /[\u0600-\u06FF]/.test(el.textContent))el.dataset.i18nSource=el.textContent.trim();if(el.dataset.i18nSource)el.textContent=el.dataset.i18nSource}});
+ $$('button,a,label,option,h1,h2,h3,p,small').forEach(el=>{if(el.children.length===0){if(!el.dataset.i18nSource && /[\u0600-\u06FF]/.test(el.textContent))el.dataset.i18nSource=el.textContent.trim();if(el.dataset.i18nSource)el.textContent=el.dataset.i18nSource}});
  const t=fullUi[lang]||fullUi.ar;
  $$('.journey-chip').forEach((e,i)=>{if(t.journey[i]){const sp=e.querySelector('span')?.outerHTML||'';e.innerHTML=sp+t.journey[i]}});
  const hs=$$('#homePage .section-title h2');if(hs[0])hs[0].textContent=t.help;if(hs[1])hs[1].textContent=t.weekly;

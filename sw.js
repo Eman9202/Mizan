@@ -1,4 +1,4 @@
-const CACHE='mizan-v21-locale-ui-fix';
+const CACHE='mizan-v22-locale-startup-fix';
 const CORE=['./','./index.html','./manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('mizan-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
